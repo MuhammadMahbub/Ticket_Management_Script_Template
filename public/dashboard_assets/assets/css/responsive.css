@@ -1,0 +1,91 @@
+@media (max-width:385px) {
+
+    .navbar .input-group>.form-control {
+        width: 98px !important;
+    }
+
+    .team_header__right button:nth-child(2) {
+        margin-top: 5px;
+    }
+
+    .current_ticket__left__btn .item {
+        margin: 5px 0;
+    }
+
+    .customer_msg_name span {
+        font-size: 14px !important;
+    }
+
+    .msg-footer__content .fa-face-smile {
+        margin-right: 0 !important;
+    }
+
+    .msg-footer__content .fa-paperclip {
+        margin: 0 !important;
+    }
+}
+
+@media (max-width:350px) {
+
+    /*=======================================
+                    Profile Page
+    =========================================*/
+
+    .profile_banner_part_banner {
+        height: 120px;
+    }
+
+    .profile_banner_part__profile_img {
+        margin-top: -80px;
+    }
+
+    .profile_banner_part__profile_img__image {
+        width: 120px !important;
+        height: 120px !important;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+
+    .conatiners {
+        padding: 0 !important;
+    }
+
+    .contact_info_detail table td {
+        font-size: 12px !important;
+    }
+}
+
+
+@media (min-width:351px) and (max-width:768px) {
+    .contact_info_detail table td {
+        font-size: 14px !important;
+    }
+
+    .team_header__right button:nth-child(2) {
+        margin-top: 5px;
+    }
+
+    .current_ticket__left__btn .item {
+        margin: 5px 0;
+    }
+
+    .msg-footer__content .fa-face-smile {
+        margin-right: 0 !important;
+    }
+
+    .msg-footer__content .fa-paperclip {
+        margin: 0 !important;
+    }
+}
+
+@media (min-width:769px) and (max-width:992px) {
+    .current_ticket__left__btn .item {
+        margin: 5px 0;
+    }
+}
+
+@media (min-width:993px) and (max-width:1085px) {
+    .current_ticket__left__btn .item {
+        margin: 5px 0;
+    }
+}
