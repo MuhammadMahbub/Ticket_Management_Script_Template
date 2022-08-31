@@ -72,21 +72,35 @@ class GeneralSettingController extends Controller
     {
         // Form Validation
         $request->validate([
-            'logo'   => 'image',
+            'logo'    => 'image',
+            'favicon' => 'image',
         ]);
 
          // Site Logo
          if($request->hasFile('logo')){
 
-            $logo                 = $request->file('logo'); 
-            $filename             = 'logo.'. $logo->extension();
-            $location             = public_path('uploads/generalSetting/'); 
+            $logo       = $request->file('logo');
+            $filename   = 'logo.'. $logo->extension();
+            $location   = public_path('uploads/generalSetting/');
 
-            $logo->move($location, $filename); 
+            $logo->move($location, $filename);
 
-            $generalSetting->logo = $filename; 
-            $generalSetting->save();
+            $generalSetting->logo = $filename;
         }
+
+        // Favicon
+         if($request->hasFile('favicon')){
+
+            $favicon    = $request->file('favicon');
+            $filename   = 'favicon.'. $favicon->extension();
+            $location   = public_path('uploads/generalSetting/');
+
+            $favicon->move($location, $filename);
+
+            $generalSetting->favicon = $filename;
+        }
+
+        $generalSetting->save();
 
         return back()->withSuccess('Updated Successfully');
     }

@@ -8,6 +8,7 @@ use App\Models\Ticket_reply;
 use Illuminate\Http\Request;
 use App\Models\UserRole;
 use App\Models\User;
+use App\Models\Country;
 use Carbon\Carbon;
 use Hash;
 use phpDocumentor\Reflection\Types\Null_;
@@ -23,8 +24,9 @@ class UserController extends Controller
     {
         $user_role_data   = UserRole::all();
         $all_user_data    = User::all();
+        $all_countries    = Country::all();
 
-        return view('admin.user.index', compact('user_role_data', 'all_user_data'));
+        return view('admin.user.index', compact('user_role_data', 'all_user_data', 'all_countries'));
     }
 
     /**
@@ -50,12 +52,14 @@ class UserController extends Controller
             'email'            => 'required|email|unique:users',
             'password'         => 'required',
             'role_id'          => 'required',
+            'country_id'       => 'required',
         ],[
             'role_id.required' => 'The role filed is required!',
         ]);
 
         User::insert([
             'name'             => $request->name,
+            'country_id'       => $request->country_id,
             'phone'            => $request->phone,
             'role_id'          => $request->role_id,
             'permission'       => UserRole::find($request->role_id)->permission,
@@ -187,4 +191,44 @@ class UserController extends Controller
 
         return response()->json(['data' => $data]);
     }
+
+    public function search_wise_user(Request $request){
+        // return $request->search_value;
+        if ($request->search_value != null) {
+            // return $request->search_value;
+            $country_id         =  Country::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $role_id            =  UserRole::where('role', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            
+            $all_user_data      =  User::where('name','LIKE','%' . $request->search_value . '%')->orWhereIn('country_id', $country_id)->orWhereIn('role_id', $role_id)->get();
+        } else {
+            $all_user_data = User::all();
+        }
+
+        $count = $all_user_data->count();
+        $user_role_data   = UserRole::all();
+
+        $view  = view('includes.users.index', compact('all_user_data', 'user_role_data'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
+    public function date_wise_user(Request $request){
+        
+        $from_date = Carbon::parse($request->from_date);
+        $to_date    = Carbon::parse($request->to_date)->addDay();
+
+        $all_user_data = User::whereBetween('created_at', [$from_date, $to_date])->get();
+        $count = $all_user_data->count();
+        $user_role_data = UserRole::all();
+        $view = view('includes.users.index', compact('all_user_data', 'user_role_data'))->render();
+        return response()->json(['data' => $view, 'count' => $count]);
+    }
+
+    public function date_clear_wise_user(Request $request){
+        $all_user_data = User::all();
+
+        $user_role_data = UserRole::all();
+        $view = view('includes.users.index', compact('all_user_data', 'user_role_data'))->render();
+        return response()->json(['data' => $view]);
+    }
 }
+

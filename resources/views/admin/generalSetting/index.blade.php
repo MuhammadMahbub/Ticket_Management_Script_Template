@@ -31,21 +31,35 @@
                                             @error('logo')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
-                                        </div> 
+                                        </div>
 
                                         <div class="form-group mt-3">
-                                            <label for="primary_color">{{ __('Preview Logo') }}</label>
+                                            <label class="form-label d-block" for="primary_color">{{ __('Preview Logo') }}</label>
                                             <img src="{{ asset('uploads/generalSetting') }}/{{ $generalSettings->logo }}" alt="not found" width="180" height="70" style="object-fit: contain;">
-                                        </div>               
+                                        </div>
                                     </div>
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-primary mr-1 mt-3">{{ __('Submit') }}</button>
+                                        <div class="form-group">
+                                            <label class="form-label d-block" for="favicon" class="mb-1"> {{ __('Favicon') }} <span class="text-danger">*</span></label>
+                                            <input type="file" name="favicon" id="favicon" class="form-control"/>
+                                            @error('favicon')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+
+                                        <div class="form-group mt-3">
+                                            <label class="form-label d-block" for="primary_color">{{ __('Preview Favicon') }}</label>
+                                            <img src="{{ asset('uploads/generalSetting') }}/{{ $generalSettings->favicon }}" alt="not found" width="180" height="70" style="object-fit: contain;">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-primary w-100 w-sm-auto mt-3">{{ __('Submit') }}</button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

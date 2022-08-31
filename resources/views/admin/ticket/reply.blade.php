@@ -15,7 +15,7 @@
 
 <section class="banner-main-section py-3 all-pages-input" id="main">
 
-    @if ($single_ticket_info) 
+    @if ($single_ticket_info)
         <div class="container-fluid px-4">
             <div class="inbox_wrapper">
                 <div class="row">
@@ -30,12 +30,14 @@
                         <div class="inbox_left_site_status bg-white rounded p-3">
                             <div class="inbox_left_site_status_heading">
                                 <h5>{{ __('Status') }}</h5>
-                                    @if ($single_ticket_info->status)                                           
-                                        @foreach ($status as $stat)
-                                            @if ($stat->id == $single_ticket_info->status)   
-                                                <input value="{{ $stat->name }}" class="form-control" disabled >
-                                            @endif
-                                        @endforeach
+                                    @if ($single_ticket_info->status)
+
+                                        <select name="stat_id" id="stat_id" class="form-control status_id" id="update_ticket_status">
+                                            @foreach ($status as $stat)
+                                                <option value="{{ $stat->id }}" {{ $stat->id == $single_ticket_info->status ? 'selected' : ''}}> {{ $stat->name }} </option>
+                                            @endforeach
+                                        </select>
+
                                     @else
                                         <input value="{{ __('no set') }}" class="form-control" disabled >
                                     @endif
@@ -46,7 +48,7 @@
                                         <label for="#">{{ __('Priority') }}</label>
                                             @if ($single_ticket_info->priority)
                                                 @foreach ($priority as $pri)
-                                                    @if ($pri->id == $single_ticket_info->priority)   
+                                                    @if ($pri->id == $single_ticket_info->priority)
                                                         <input value="{{ $pri->name }}" class="form-control mt-2" disabled >
                                                     @endif
                                                 @endforeach
@@ -101,6 +103,7 @@
                                 </div>
                                 <div class="inbox_left_site_inbox__id">
                                     <p>ID:#{{ $single_ticket_info->id ?? '' }}</p>
+                                    <input type="hidden" class="status_update_ticket_id" value="{{ $single_ticket_info->id }}">
                                 </div>
                             </div>
                             <div class="inbox_left_site_inbox__heading mt-2">
@@ -108,9 +111,9 @@
                                         <span class="tick_sub_problem">Subject : </span>  <span> {{ $single_ticket_info->subject }} </span>
                                     </p>
                                     <p>
-                                        <span class="tick_sub_problem">Problem : </span>  <span> {{ $single_ticket_info->ticket_body }} </span>   
+                                        <span class="tick_sub_problem">Problem : </span>  <span> {{ $single_ticket_info->ticket_body }} </span>
                                     </p>
-                                    
+
                             </div>
                         </div>
                         <hr class="m-0 p-0">
@@ -121,9 +124,9 @@
                                         @php
                                             $recent_reply_infos = '';
                                         @endphp
-                                        
+
                                         @include('includes.get_message_dropdown')
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -149,9 +152,9 @@
 
                             <div class="inbox_right_side__profile  p-3">
                                 <div class="inbox_right_side__profile__header text-center mb-4">
-                                    
+
                                     <img src="{{ $single_ticket_info->get_customer->profile_photo_url }}" class="me-2" alt="" width="50" height="50" style="border-radius: 50%">
-                                    <h6 class="mt-2 mb-0"><b>{{ $single_ticket_info->get_customer->name }}</b></h6> 
+                                    <h6 class="mt-2 mb-0"><b>{{ $single_ticket_info->get_customer->name }}</b></h6>
                                 </div>
 
                                 <div class="inbox_right_side__profile__info">
@@ -169,7 +172,7 @@
                                     <div
                                         class="inbox_right_side__profile__info__phone d-flex justify-content-between">
                                         <p>{{ __('Email') }}:</p>
-                                        <p>{{ $single_ticket_info->get_customer->email }}</p>
+                                        <p>{{ $single_ticket_info->get_customer->email ?? '' }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -211,7 +214,7 @@
                 if (code == 13) {
                     var reply_message = $('.reply').val();
                     var ticket_id     = $('.ticket_id').val();
-                    
+
                     $.ajaxSetup({
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -241,7 +244,7 @@
 
                 var reply_message = $('.reply').val();
                 var ticket_id     = $('.ticket_id').val();
-                
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -268,7 +271,7 @@
             function renderReply(){
 
                 var ticket_id = $('.ticket_id').val();
-                
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -285,8 +288,42 @@
                         $('.get_message_dropdown').html(data.data)
                     }
                 })
-            } 
+            }
         });
     </script>
-    
+
+    <script>
+        $(document).ready(function(){
+            $('.status_id').on('change', function(){
+
+               let status_id  = $(this).val();
+               let ticket_id = $('.status_update_ticket_id').val();
+            //    alert(ticket_id);
+               $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('update.ticket.status') }}",
+                    data: {
+                        status_id: status_id,
+                        ticket_id: ticket_id
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        $('#update_ticket_status').html(data.data)
+                        if (data.status == 200) {
+                            toastr.success(data.message);
+                        }
+                    }
+                })
+
+
+            });
+        });
+    </script>
+
 @endsection

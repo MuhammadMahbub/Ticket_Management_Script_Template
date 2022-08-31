@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\CarbonPeriod;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Status;
@@ -15,6 +16,8 @@ use App\Models\Ticket_reply;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TicketController extends Controller
 {
@@ -26,9 +29,11 @@ class TicketController extends Controller
     public function index()
     {
         $softDeletedTickets = Ticket::onlyTrashed()->get();
+
         $all_agents = User::where('role_id', 2)->latest()->get();
         return view('admin.ticket.index',[
             'tickets'                     => Ticket::orderBy('id', 'DESC')->limit(5)->get(),
+            'total_tickets'               => Ticket::all(),
             'count_admin_create_tickets'  => Ticket::where('creator', 1)->count(),
             'status'                      => Status::orderBy('id','ASC')->get(),
             'priority'                    => Priority::all(),
@@ -40,20 +45,7 @@ class TicketController extends Controller
         ]);
     }
 
-    public function soft_deleted_tickets()
-    {
-        $softDeletedTickets = Ticket::onlyTrashed()->get();
-        return view('admin.ticket.deleted_ticket',[
-        'tickets'                         => Ticket::orderBy('id', 'DESC')->get(),
-        'count_admin_create_tickets'      => Ticket::where('creator', 1)->count(),
-        'status'                          => Status::orderBy('id','ASC')->get(),
-        'priority'                        => Priority::all(),
-        'roles'                           => UserRole::all(),
-        'department'                      => Department::all(),
-        'users'                           => User::all(),
-        'softDeletedTickets'              => $softDeletedTickets,
-        ]);
-    }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -566,6 +558,7 @@ class TicketController extends Controller
 
     public function ticket_reply($id)
     {
+        
         $all_reply_individual_tickets = Ticket_reply::where('ticket_id', $id)->orderBy('id', 'ASC')->get(); // also use latest()
         $single_ticket_info           = Ticket::find($id);
         $status                       = Status::all();
@@ -613,10 +606,11 @@ class TicketController extends Controller
         $priority                     = Priority::all();
         $department                   = Department::all();
         $roles                        = UserRole::all();
+        $total_tickets                = Ticket::all();
 
         $status_info = Status::find($status_id);
 
-        return view('admin.ticket.individual_ticket_show', compact('tickets', 'softDeletedTickets', 'status', 'count_admin_create_tickets', 'all_tickets','priority','department', 'status_info', 'roles', 'all_agents','status_id'));
+        return view('admin.ticket.individual_ticket_show', compact('tickets', 'softDeletedTickets', 'status', 'count_admin_create_tickets', 'all_tickets','priority','department', 'status_info', 'roles', 'all_agents','status_id', 'total_tickets'));
     }
 
     public function all_tickets_show(){
@@ -627,8 +621,10 @@ class TicketController extends Controller
         $priority                     = Priority::all();
         $department                   = Department::all();
         $roles                        = UserRole::all();
+        $total_tickets                = Ticket::all();
+        $softDeletedTickets         = Ticket::onlyTrashed()->get();
 
-        return view('admin.ticket.all_tickets_show', compact('status', 'count_admin_create_tickets', 'tickets','priority','department','roles'));
+        return view('admin.ticket.all_tickets_show', compact('total_tickets', 'softDeletedTickets', 'status', 'count_admin_create_tickets', 'tickets','priority','department','roles'));
     }
 
 
@@ -649,6 +645,26 @@ class TicketController extends Controller
         $department             = Department::all();
 
         $view  = view('includes.tickets.index', compact('tickets','status','priority','roles','department'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
+    // date wise tickets
+    public function date_wise_deleted_tickets(Request $request){
+        
+        $from_date = Carbon::parse($request->from_date);
+
+        $to_date    = Carbon::parse($request->to_date)->addDay();
+
+        $softDeletedTickets = Ticket::onlyTrashed()->whereBetween('created_at', [$from_date, $to_date])->limit(5)->get();
+        
+        $count = $softDeletedTickets->count();
+
+        $status                 = Status::orderBy('id','ASC')->get();
+        $priority               = Priority::all();
+        $roles                  = UserRole::all();
+        $department             = Department::all();
+
+        $view  = view('includes.tickets.soft_deleted_ticket', compact('softDeletedTickets','status','priority','roles','department'))->render();
         return response()->json(['data' => $view , 'count' => $count]);
     }
 
@@ -686,6 +702,20 @@ class TicketController extends Controller
         return response()->json(['data' => $view]);
     }
 
+    // date clear wise tickets
+    public function date_clear_wise_deleted_tickets(Request $request){
+        
+        $softDeletedTickets = Ticket::onlyTrashed()->latest()->limit(5)->get();
+        
+        $status                 = Status::orderBy('id','ASC')->get();
+        $priority               = Priority::all();
+        $roles                  = UserRole::all();
+        $department             = Department::all();
+
+        $view  = view('includes.tickets.soft_deleted_ticket', compact('softDeletedTickets','status','priority','roles','department'))->render();
+        return response()->json(['data' => $view]);
+    }
+
     // agent clear wise tickets
     public function agent_clear_wise_tickets(Request $request){
         
@@ -697,6 +727,19 @@ class TicketController extends Controller
         $department             = Department::all();
 
         $view  = view('includes.tickets.index', compact('tickets','status','priority','roles','department'))->render();
+        return response()->json(['data' => $view]);
+    }
+
+    public function agent_clear_wise_deleted_tickets(Request $request){
+        
+        $softDeletedTickets = Ticket::onlyTrashed()->latest()->limit(5)->get();
+        
+        $status                 = Status::orderBy('id','ASC')->get();
+        $priority               = Priority::all();
+        $roles                  = UserRole::all();
+        $department             = Department::all();
+
+        $view  = view('includes.tickets.soft_deleted_ticket', compact('softDeletedTickets','status','priority','roles','department'))->render();
         return response()->json(['data' => $view]);
     }
 
@@ -713,6 +756,21 @@ class TicketController extends Controller
         $department             = Department::all();
 
         $view  = view('includes.tickets.index', compact('tickets','status','priority','roles','department'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
+    public function agent_wise_deleted_tickets(Request $request){
+        
+        $softDeletedTickets = Ticket::onlyTrashed()->whereJsonContains('agent_id', $request->agents_id)->latest()->limit(5)->get();
+        
+        $count = $softDeletedTickets->count();
+
+        $status                 = Status::orderBy('id','ASC')->get();
+        $priority               = Priority::all();
+        $roles                  = UserRole::all();
+        $department             = Department::all();
+
+        $view  = view('includes.tickets.soft_deleted_ticket', compact('softDeletedTickets','status','priority','roles','department'))->render();
         return response()->json(['data' => $view , 'count' => $count]);
     }
 
@@ -741,7 +799,7 @@ class TicketController extends Controller
             $priority_id     = Priority::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
             // $agent_id        = json_encode(User::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id'));
 
-            $tickets         = Ticket::where('id','LIKE','%' . $request->search_value . '%')->limit(5)->orWhereIn('customer', $user_id)->orWhereIn('department', $department_id)->orWhere('subject', 'LIKE','%' . $request->search_value . '%')->orWhereIn('status', $status_id)->orWhereIn('priority', $priority_id)->get();
+            $tickets         = Ticket::where('id','LIKE','%' . $request->search_value . '%')->orWhereIn('customer', $user_id)->orWhereIn('department', $department_id)->orWhere('subject', 'LIKE','%' . $request->search_value . '%')->orWhereIn('status', $status_id)->orWhereIn('priority', $priority_id)->limit(5)->get();
             // ->orWhere('created_at', 'LIKE','%' . Carbon::parse($request->search_value)->format('Y-m-d') . '%')
         } else {
             $tickets = Ticket::orderBy('id', 'DESC')->limit(5)->get();
@@ -757,6 +815,53 @@ class TicketController extends Controller
         $view  = view('includes.tickets.index', compact('tickets','status','priority','roles','department'))->render();
         return response()->json(['data' => $view , 'count' => $count]);
     }
+
+    public function soft_deleted_tickets()
+    {
+        $softDeletedTickets = Ticket::onlyTrashed()->get();
+        $all_agents = User::where('role_id', 2)->latest()->get();
+        return view('admin.ticket.deleted_ticket',[
+        'tickets'                         => Ticket::orderBy('id', 'DESC')->get(),
+        'count_admin_create_tickets'      => Ticket::where('creator', 1)->count(),
+        'status'                          => Status::orderBy('id','ASC')->get(),
+        'priority'                        => Priority::all(),
+        'roles'                           => UserRole::all(),
+        'department'                      => Department::all(),
+        'users'                           => User::all(),
+        'total_tickets'                   => Ticket::all(),
+        'softDeletedTickets'              => $softDeletedTickets,
+        'all_agents'                      => $all_agents,
+        ]);
+    }
+
+
+    public function search_wise_deleted_tickets(Request $request){
+        
+        if ($request->search_value != null) {
+            $user_id         =  User::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $department_id   = Department::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $status_id       = Status::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $priority_id     = Priority::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            // $agent_id        = json_encode(User::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id'));
+
+
+            $softDeletedTickets         = Ticket::where('id','LIKE','%' . $request->search_value . '%')->orWhereIn('customer', $user_id)->orWhereIn('department', $department_id)->orWhere('subject', 'LIKE','%' . $request->search_value . '%')->orWhereIn('status', $status_id)->orWhereIn('priority', $priority_id)->onlyTrashed()->limit(5)->get();
+
+        } else {
+            $softDeletedTickets = Ticket::onlyTrashed()->latest()->limit(5)->get();
+        }
+
+        $status                 = Status::orderBy('id','ASC')->get();
+        $priority               = Priority::all();
+        $roles                  = UserRole::all();
+        $department             = Department::all();
+
+        $count = $softDeletedTickets->count();
+
+        $view  = view('includes.tickets.soft_deleted_ticket', compact('softDeletedTickets','status','priority','roles','department'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
 
     // individual search wise tickets
     public function individual_search_wise_tickets(Request $request){
@@ -907,6 +1012,99 @@ class TicketController extends Controller
 
     }
 
+    public function deleted_tickets_load_more(Request $request){
+
+        if ($request->search_value) {
+
+            $user_id         =  User::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $department_id   = Department::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $status_id       = Status::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $priority_id     = Priority::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+
+            $softDeletedTickets   = Ticket::onlyTrashed()->where('id','LIKE','%' . $request->search_value . '%')->orWhereIn('customer', $user_id)->orWhereIn('department', $department_id)->orWhere('subject', 'LIKE','%' . $request->search_value . '%')->orWhereIn('status', $status_id)->orWhereIn('priority', $priority_id)->skip($request->count)->take(5)->get();
+            
+
+            $status                 = Status::orderBy('id','ASC')->get();
+            $priority               = Priority::all();
+            $roles                  = UserRole::all();
+            $department             = Department::all();
+
+            $view = view('includes.tickets.soft_deleted_ticket',compact('softDeletedTickets', 'status', 'priority', 'roles', 'department'));
+    
+            $data = $view->render();
+            $count = $request->count + 5;
+            $ticket_count = $softDeletedTickets->count();
+    
+            
+            return response()->json(['data'=>$data, 'count'=> $count,'ticket_count'=>$ticket_count]);
+        }
+
+        if ($request->from_date) {
+
+            $from_date  = Carbon::parse($request->from_date);
+            $to_date    = Carbon::parse($request->to_date)->addDay();
+
+            $user_id         =  User::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $department_id   = Department::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $status_id       = Status::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $priority_id     = Priority::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+
+            $softDeletedTickets   = Ticket::onlyTrashed()->whereBetween('created_at', [$from_date, $to_date])->skip($request->count)->take(5)->get();
+            
+            $status                 = Status::orderBy('id','ASC')->get();
+            $priority               = Priority::all();
+            $roles                  = UserRole::all();
+            $department             = Department::all();
+
+            $view = view('includes.tickets.soft_deleted_ticket',compact('softDeletedTickets', 'status', 'priority', 'roles', 'department'));
+    
+            $data = $view->render();
+            $count = $request->count + 5;
+            $ticket_count = $softDeletedTickets->count();
+    
+            return response()->json(['data'=>$data, 'count'=> $count,'ticket_count'=>$ticket_count]);
+        }
+
+        if ($request->agents_id) {
+
+            $user_id         =  User::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $department_id   =  Department::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $status_id       =  Status::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $priority_id     =  Priority::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+
+            $softDeletedTickets         = Ticket::onlyTrashed()->whereJsonContains('agent_id', $request->agents_id)->skip($request->count)->take(5)->get();
+            
+            $status                 = Status::orderBy('id','ASC')->get();
+            $priority               = Priority::all();
+            $roles                  = UserRole::all();
+            $department             = Department::all();
+
+            $view = view('includes.tickets.soft_deleted_ticket',compact('softDeletedTickets', 'status', 'priority', 'roles', 'department'));
+    
+            $data = $view->render();
+            $count = $request->count + 5;
+            $ticket_count = $softDeletedTickets->count();
+    
+            return response()->json(['data'=>$data, 'count'=> $count,'ticket_count'=>$ticket_count]);
+        }
+
+        $softDeletedTickets = Ticket::onlyTrashed()->skip($request->count)->take(5)->get();
+
+            $status                 = Status::orderBy('id','ASC')->get();
+            $priority               = Priority::all();
+            $roles                  = UserRole::all();
+            $department             = Department::all();
+    
+            $view = view('includes.tickets.soft_deleted_ticket',compact('softDeletedTickets', 'status', 'priority', 'roles', 'department'));
+    
+            $data = $view->render();
+            $count = $request->count + 5;
+            $ticket_count = $softDeletedTickets->count();
+    
+            return response()->json(['data'=>$data, 'count'=> $count,'ticket_count'=>$ticket_count]);
+    }
+
+
     public function individual_tickets_load_more(Request $request){
 
         if ($request->search_value) {
@@ -1029,41 +1227,41 @@ class TicketController extends Controller
         $search_data = $request->data;
 
         if ($request->data == 'year') {
-            $total_ticket               = [];
+            // $total_ticket               = [];
             $solved_ticket              = [];
-            $pending_ticket             = [];
+            // $pending_ticket             = [];
             $opened_ticket              = [];
 
             for ($i=1; $i <=12 ; $i++) {
-                $total_ticket []     = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->count();
+                // $total_ticket []     = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->count();
                 $solved_ticket []    = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->where('status',3)->count();
-                $pending_ticket []   = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->where('status',2)->count();
+                // $pending_ticket []   = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->where('status',2)->count();
                 $opened_ticket []    = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->where('status',1)->count();
             }
 
-            $data = view('includes.chart.admin_ticket_analytics', compact('total_ticket', 'solved_ticket', 'pending_ticket', 'opened_ticket', 'search_data'))->render();
+            $data = view('includes.chart.admin_ticket_analytics', compact('solved_ticket', 'opened_ticket', 'search_data'))->render();
             return response()->json(['data' => $data]);
 
         } else {
 
-            $total_ticket               = [];
+            // $total_ticket               = [];
             $solved_ticket              = [];
-            $pending_ticket             = [];
+            // $pending_ticket             = [];
             $opened_ticket              = [];
             $all_days                   = [];
             $total_days = Carbon::now()->daysInMonth;
 
             for ($i=1; $i <= $total_days ; $i++) { 
                 
-                $total_ticket  []    = Ticket::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', $i)->count();
+                // $total_ticket  []    = Ticket::whereYear('created_at', date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', $i)->count();
                 $solved_ticket []    = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', $i)->where('status',3)->count();
-                $pending_ticket []   = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', $i)->where('status',2)->count();
+                // $pending_ticket []   = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', $i)->where('status',2)->count();
                 $opened_ticket []    = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at', date('m'))->whereDay('created_at', $i)->where('status',1)->count();
                 $all_days [] = $i;
             }
 
 
-            $data = view('includes.chart.admin_ticket_analytics', compact('total_ticket', 'solved_ticket', 'pending_ticket', 'opened_ticket', 'search_data', 'all_days'))->render();
+            $data = view('includes.chart.admin_ticket_analytics', compact('solved_ticket', 'opened_ticket', 'search_data', 'all_days'))->render();
             return response()->json(['data' => $data]);
         }
         
@@ -1076,49 +1274,238 @@ class TicketController extends Controller
     // current issues chart for admin
     public function current_issues_chart(Request $request){
 
-       $search_data = $request->year;
+    //    $total_days = Carbon::now()->daysInMonth;
+
+    //    return $today_date  = strtotime(date('d-M-Y'));
+    //    $total_ticket = 90;
+    //    $data = view('includes.chart.current_issues_chart_render', compact('today_date', 'total_ticket'))->render();
+    //    return response()->json(['data' => $data]);
+    // return $jan = Carbon::now()->month(01)->daysInMonth;
 
 
-       if ($search_data == 'current_year') {
-            
-        // ticket analytics for admin
-        $total_ticket               = [];
-        $solved_ticket              = [];
-        $pending_ticket             = [];
-        $opened_ticket              = [];
+    // return $today_date  = strtotime(date('d-M-Y'));
 
-        for ($i=1; $i <=12 ; $i++) {
-            $total_ticket []     = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->count();
-            $solved_ticket []    = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->where('status',3)->count();
-            $pending_ticket []   = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->where('status',2)->count();
-            $opened_ticket []    = Ticket::whereYear('created_at',date('Y'))->whereMonth('created_at',$i)->where('status',1)->count();
+    // $month = '2022-01';
+    // $start = Carbon::parse($month)->startOfMonth();
+    // $end = Carbon::parse($month)->endOfMonth();
+    // $period = CarbonPeriod::create($start, $end);
+    // $dates = [];
+    // $months = [];
+    // $values = [];
+
+
+    // for ($i=1; $i < 4; $i++) { 
+    
+    //     $months = Carbon::now()->subMonth();
+
+    //    for ($i=1; $i <= $months->daysInMonth ; $i++) { 
+    //       echo $i.' -> '.$months->format('M/Y');
+    //    }
+
+    // }
+
+    // die();
+    // $data = view('includes.chart.current_issues_chart_render', compact('dates'))->render();
+
+    // return response()->json(['data' => $data]);
+
+    // die();
+    // return $jan = Carbon::now()->month(2)->daysInMonth;
+
+
+    
+    // $mar = Carbon::now()->month(03)->daysInMonth;
+    
+    $search_data = $request->month;
+
+       if ($search_data == 'current_month') {
+
+        $current_month = Carbon::now()->month;
+        $current_year  = Carbon::now()->year;
+
+        $open_tickets = DB::table('tickets')->where('status', 1)->whereYear('created_at', $current_year)->whereMonth('created_at', $current_month)->select('created_at', DB::raw('count(*) as total'))->groupBy('created_at')->orderBy('created_at', 'asc')->get();
+
+        $open_ticket_datas = [];
+        foreach ($open_tickets as  $value) {
+            $now = Carbon::parse($value->created_at);
+            $total = $value->total;
+            $open_ticket_datas [] = [(int) ($now->timestamp . str_pad($now->milli, 3, '0', STR_PAD_LEFT)), $total];
         }
-           
-        $data = view('includes.chart.current_issues_chart_render', compact('total_ticket', 'solved_ticket', 'pending_ticket', 'opened_ticket', 'search_data'))->render();
+
+        $closed_tickets = DB::table('tickets')->where('status', 3)->whereYear('created_at', $current_year)->whereMonth('created_at', $current_month)->select('created_at', DB::raw('count(*) as total'))->groupBy('created_at')->orderBy('created_at', 'asc')->get();
+
+        
+        $close_ticket_datas = [];
+        foreach ($closed_tickets as $value) {
+            $now = Carbon::parse($value->created_at);
+            $total = $value->total;
+            $close_ticket_datas [] = [(int) ($now->timestamp . str_pad($now->milli, 3, '0', STR_PAD_LEFT)), $total];
+        }
+        
+        $view_month = Carbon::now()->format('d M Y');
+
+        $data = view('includes.chart.current_issues_chart_render', compact('open_ticket_datas', 'close_ticket_datas', 'search_data', 'view_month'))->render();
         return response()->json(['data' => $data]);
 
        } else {
             
-            $year = date("Y");
-            $previousyear = $year -1;
+            $current_year  = Carbon::now()->year;
+            $current_month = Carbon::now()->month;
+            $previous_month = $current_month -1;
 
-            // ticket analytics for admin
-            $total_ticket               = [];
-            $solved_ticket              = [];
-            $pending_ticket             = [];
-            $opened_ticket              = [];
+            $open_tickets = DB::table('tickets')->where('status', 1)->whereYear('created_at', $current_year)->whereMonth('created_at', $previous_month)->select('created_at', DB::raw('count(*) as total'))->groupBy('created_at')->orderBy('created_at', 'asc')->get();
 
-            for ($i=1; $i <=12 ; $i++) {
-                $total_ticket []     = Ticket::whereYear('created_at', $previousyear)->whereMonth('created_at', $i)->count();
-                $solved_ticket []    = Ticket::whereYear('created_at', $previousyear)->whereMonth('created_at',$i)->where('status',3)->count();
-                $pending_ticket []   = Ticket::whereYear('created_at', $previousyear)->whereMonth('created_at',$i)->where('status',2)->count();
-                $opened_ticket []    = Ticket::whereYear('created_at', $previousyear)->whereMonth('created_at',$i)->where('status',1)->count();
+            $open_ticket_datas = [];
+            foreach ($open_tickets as  $value) {
+                $now = Carbon::parse($value->created_at);
+                $total = $value->total;
+                $open_ticket_datas [] = [(int) ($now->timestamp . str_pad($now->milli, 3, '0', STR_PAD_LEFT)), $total];
             }
-            
-            $data = view('includes.chart.current_issues_chart_render', compact('total_ticket', 'solved_ticket', 'pending_ticket', 'opened_ticket', 'search_data'))->render();
+
+            $closed_tickets = DB::table('tickets')->where('status', 3)->whereYear('created_at', $current_year)->whereMonth('created_at', $previous_month)->select('created_at', DB::raw('count(*) as total'))->groupBy('created_at')->orderBy('created_at', 'asc')->get();
+
+        
+            $close_ticket_datas = [];
+            foreach ($closed_tickets as $value) {
+                $now = Carbon::parse($value->created_at);
+                $total = $value->total;
+                $close_ticket_datas [] = [(int) ($now->timestamp . str_pad($now->milli, 3, '0', STR_PAD_LEFT)), $total];
+            }
+
+           $view_month = date('d M Y', strtotime('first day of last month'));
+
+            $data = view('includes.chart.current_issues_chart_render', compact('view_month', 'open_ticket_datas', 'close_ticket_datas', 'search_data'))->render();
             return response()->json(['data' => $data]);
+
         }
        
     }   
+
+
+
+    // today tomorrow wise filter ticket
+    public function today_tomorrow_ticket(Request $request){
+        $search_value = $request->search_value;
+
+        if ($search_value == 'today') {
+            
+        $current_month = Carbon::now()->month;
+        $current_year  = Carbon::now()->year;
+        $current_day   = Carbon::now()->day;
+
+         $today_best_ticket =  DB::table('tickets')->whereYear('created_at', $current_year)->whereMonth('created_at', $current_month)->whereDay('created_at', $current_day)->select('customer', DB::raw('count(*) as total'))->groupBy('customer')->orderBy('total', 'desc')->take(20)->get();
+
+        $data = view('includes.chart.today_tomorrow', compact('today_best_ticket', 'search_value'))->render();
+        return response()->json(['data' => $data]);
+
+        }else{
+
+            $current_month = Carbon::now()->month;
+            $current_year  = Carbon::now()->year;
+            $current_day   = Carbon::now()->day -1;
+
+            $today_best_ticket =  DB::table('tickets')->whereYear('created_at', $current_year)->whereMonth('created_at', $current_month)->whereDay('created_at', $current_day)->select('customer', DB::raw('count(*) as total'))->groupBy('customer')->orderBy('total', 'desc')->take(20)->get();
+            // return $today_best_ticket;
+            $data = view('includes.chart.today_tomorrow', compact('today_best_ticket', 'search_value'))->render();
+            return response()->json(['data' => $data]);
+
+        }
+    }
+
+    // update ticket status
+    public function update_ticket_status(Request $request){
+
+        Ticket::find($request->ticket_id)->update([
+            'status' => $request->status_id,
+        ]);
+
+        $single_ticket_info  = Ticket::find($request->ticket_id);
+        $status = Status::all();
+
+        $data = view('includes.update_ticket_status.update_status', compact('single_ticket_info', 'status'))->render();
+        return response()->json([
+            'data' => $data,
+            'status' => 200,
+            'message' => 'Status has been changed!'
+        ]);
+    }
+
+
+    public function filter_by_all_tickets(Request $request){
+        return $request->ticket_array;
+    }
+
+    public function filter_by_single_ticket(Request $request){
+        return $request->ticket_array;
+    }
+
+    
+
+    public function selected_ticket_delete(Request $request){
+
+       $tickets_id = explode(',', $request->ticket_id);
+
+       foreach ($tickets_id as $id) {
+
+            Ticket::find($id)->delete();
+       }
+
+       return back()->with('success', 'Delete successfully!');
+
+    }
+
+    public function filter_by_all_soft_tickets(){
+        return 'i am here!';
+    }
+    public function filter_by_single_soft_ticket(){
+        return 'i am here!';
+    }
+
+    public function selected_soft_ticket_delete(Request $request){
+        $ticket_ids = explode(',', $request->ticket_id);
+        foreach ($ticket_ids as $id) {
+            Ticket::onlyTrashed()->find($id)->forceDelete();
+        }
+        return back()->with('success', 'Delete successfully!');
+    }
+    
+    public function selected_soft_ticket_restore(Request $request){
+        $ticket_ids = explode(',', $request->ticket_id);
+        foreach ($ticket_ids as $id) {
+            Ticket::onlyTrashed()->find($id)->restore();
+        }
+        return back()->with('success', 'Restore successfully!');
+    }
+
+    public function ticket_assign_team_individually(Request $request){
+        $tickets_id = explode(',', $request->ticket_id);
+        // $agent_ids = json_decode($request->agent_id);
+
+        foreach ($tickets_id as $id) {
+
+            Ticket::find($id)->update([
+                'agent_id' => json_encode($request->agent_id),
+            ]);
+
+            if ($request->agent_id) {
+                foreach ($request->agent_id as $single_agent_id) {
+                    Notification::insert([
+                        'user_id'     => Auth::id(),
+                        'role_id'     => Auth::user()->role_id,
+                        'assign_id'   => $single_agent_id,
+                        'ticket_id'   => $id,
+                        'notify_body' => "has assign this ticket, whose ticket id is ". '"#' . $id . '"'. " " . "on",
+                        'read_status' => 0,
+                        'route'       => "ticket.index",
+                        'created_at'  => Carbon::now()
+                    ]);
+                } 
+            }
+        }
+
+        return back()->with('success', 'Assign Successfully!');
+    }
+
+
 
 }

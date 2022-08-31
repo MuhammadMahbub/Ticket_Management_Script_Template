@@ -16,11 +16,11 @@ class CreateTicketsTable extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->integer('customer')->nullable();
-            $table->string('subject');
+            $table->string('subject')->nullable();
             $table->integer('department')->nullable();
             $table->integer('status')->nullable();
             $table->integer('priority')->nullable();
-            $table->text('ticket_body');
+            $table->text('ticket_body')->nullable();
             $table->string('agent_id')->nullable();
             $table->integer('creator')->nullable();
             $table->date('expire_date')->nullable();

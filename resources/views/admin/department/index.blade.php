@@ -68,19 +68,54 @@
         </div>
     </div>
     <!--==========Team Header==========-->
-    <div class="team_header d-flex justify-content-between flex-wrap mt-3 ">
+    <div class="team_header d-sm-flex justify-content-between flex-wrap mt-3 mb-3">
         <div class="team_header__left">
-            <div class="input-group mb-3">
-
-            </div>
         </div>
         <div class="team_header__right">
-            <button data-bs-toggle="modal" class="mt-2 mb-4" data-bs-target="#createDepartment" data-bs-whatever="@mdo">
+            <button data-bs-toggle="modal" class="w-100 w-sm-auto" data-bs-target="#createDepartment" data-bs-whatever="@mdo">
                 <a>
                     <span><i class="fa-solid fa-circle-plus me-2"></i></span>
                     {{ __('Create Department') }}</a>
             </button>
 
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col-xl-8">
+            <div class="row align-items-end">
+                <div class="col-md">
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="from__date">From</label>
+                        <input type="date" name="from_date" id="from__date" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="form-group mb-3">
+                        <label class="form-label" for="to__date">To</label>
+                        <input type="date" name="to_date" id="to__date" class="form-control">
+                    </div>
+                </div>
+                <div class="col-md-auto">
+                    <div class="form-group mb-3">
+                        <button class="btn btn-primary w-100 w-sm-auto" id="filter__date">filter</button>
+                        <button class="btn btn-danger w-100 w-sm-auto mt-2 mt-sm-0 d-none" id="clear__filter__date">Clear filter</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4">
+            <div class="row align-items-end">
+                <div class="col-md">
+                    <div class="current_tickets_heading__right d-flex align-items-center">
+                        <div class="input-group mb-3" style="margin-top: 32px">
+                            <button class="btn bg-white" id="button-addon1">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                            <input type="text" id="search_department" class="form-control border-0" placeholder="Search Here.."  name="Search Keyword">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="user_list user-page table-responsive table-overflow-none">
@@ -93,137 +128,11 @@
                     <th scope="col">{{ __('Action') }}</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="render_department">
 
-                @forelse($departments as $department)
-                    <tr>
-                        <th scope="row">{{ $loop->iteration }}</th>
-                        <td>
-                            <a href="{{ route('department.show', $department->id) }}" style="text-decoration:none; color:#7b7f90"> {{ $department->name ?? '' }} </a>
-                        </td>
-                        <td>{{ $department->created_at->format('d-m-Y') ?? '' }}</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa-solid fa-ellipsis-vertical"></i>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="{{ route('department.show', $department->id) }}" style="cursor: pointer"> <i class="fa-solid fa-eye"></i> {{ __('Show') }} </a></li>
-                                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#updateDepartment{{ $department->id }}" style="cursor:pointer"> <i class="fa-solid fa-edit"> </i> {{ __('Edit') }}</a></li>
-                                    <li>
-                                        <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#deleteDepartment{{ $department->id }}" style="cursor:pointer"> <i class="fa-solid fa-trash"> </i> {{ __('Delete') }}</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-
-                    <div class="modal fade" id="deleteDepartment{{ $department->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header border-bottom-0 modal_header">
-                                    <h5 style="color: #6C7BFF;" class="modal-title" id="exampleModalLabel">{{ __('Delete Department') }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <h6>{{ __('Are You Sure?') }}</h6>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('No') }}</button>
-                                    <form action="{{ route('department.destroy', $department->id) }}" method="POST" enctype="multipart/form-data">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="btn btn-danger">{{ __('Delete') }}</button>
-                                    </form>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <!--=====MODAL FOR UPDATE USER=====-->
-                    <div class="modal fade" id="updateDepartment{{ $department->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header border-bottom-0 modal_header">
-                                    <h5 style="color: #6C7BFF;" class="modal-title" id="exampleModalLabel">{{ __('Update Department') }}</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <form action="{{ route('department.update', $department->id) }}" method="POST">
-                                        @csrf
-                                        @method('put')
-                                        <div class="form-group mt-2">
-                                            <label class="form-label">{{ __('Name') }} <span class="text-danger"> *</span></label>
-                                            <input type="text" name="name" class="form-control" value="{{ $department->name }}">
-                                            @error('name')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="role_id" class="col-form-label mt-1"> {{ __('Assign') }} </label>
-                                            <select name="role_id" id="role_drop{{ $department->id }}" class="form-select mt-1">
-                                                @if ($department->role_id)
-                                                    <option value="{{ $department->role_id }}">{{ $department->get_role->role }}</option>
-                                                @else
-                                                    <option disabled selected>--{{ __('Select Agent') }}--</option>
-                                                    @foreach ($roles as $item)
-                                                        @if ($item->id == 2)
-                                                            <option value="{{ $item->id }}">{{ $item->role }}</option>
-                                                        @endif
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                            @error("role_id")
-                                                <span class="text-danger"> {{ $message }}</span>
-                                            @enderror
-                                        </div>
-
-                                        <div class="mb-3">
-                                            @php
-                                                $user_role = App\Models\User::where('role_id', $department->role_id)->get();
-                                            @endphp
-
-                                            <label for="user_id" class="mt-1 col-form-label"> {{ __('Assignee Name') }} 
-                                                <span style="color:#8b8989; font-size:13px">({{ __('If do not have agent, then create an agent') }}) | <a href="{{ route('users.index') }}" style="text-decoration: none"> {{ __('create agent') }} </a></span>
-                                            </label>
-                                            <select name="user_id[]" multiple id="user_drop{{ $department->id }}" class="form-select mt-1" aria-label="Default select example">
-
-                                                @if (json_decode($department->user_id))
-                                                    @foreach ($user_role as $all_agent_name)
-                                                        <option value="{{ $all_agent_name->id }}" {{ in_array($all_agent_name->id, json_decode($department->user_id)) ? 'selected':'' }}> {{ $all_agent_name->name }} </option>
-                                                    @endforeach
-                                                @else
-
-                                                    @php
-                                                        // $show_users = [];
-                                                        $user_role = App\Models\User::where('role_id', 2)->get()
-                                                    @endphp
-                                                    {{-- @include('includes.user_dropdown') --}}
-                                                    @foreach ($user_role as $agent)
-                                                        <option value="{{ $agent->id }}">{{ $agent->name }} </option>
-                                                    @endforeach
-                                                @endif
-
-                                            </select>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-                                            <button  type="submit" class="btn btn-primary">{{ __('Update') }}</button>
-                                        </div>
-                                    </form>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <tr><td colspan="4"> <h5 class="text-center">{{ __('No Data Available Here!') }}</h5></td></tr>
-                @endforelse
-                </tbody>
+                @include('includes.department.index')
+                
+            </tbody>
         </table>
     </div>
 </div>
@@ -293,6 +202,111 @@
     });
 </script>
 @endforeach
+
+    {{-- search wise status --}}
+    <script>
+        $(document).ready(function() {
+                $('#search_department').on('keyup',function(){
+                    let search_value = $(this).val();
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('search.wise.department') }}",
+                        data: {
+                            search_value: search_value,
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if ((response.count)*1 <  1) {
+                                $('#render_department').html('<tr ><td colspan="1000" class="text-danger text-center py-3">No Data Found</td></tr>');
+                            } else {
+                                $('#render_department').html(response.data);
+                            }
+
+
+                        }
+                    })
+
+                });
+            });
+    </script>
+
+    {{-- filter by date js --}}
+    <script>
+        $(document).ready(function() {
+                $('#filter__date').on('click',function(){
+                    let from_date = $('#from__date').val();
+                    let to_date = $('#to__date').val();
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('date.wise.department') }}",
+                        data: {
+                            from_date: from_date,
+                            to_date: to_date,
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if ((response.count)*1 <  1) {
+                                $('#render_department').html('<tr ><td colspan="1000" class="text-danger text-center py-3">No Data Found</td></tr>');
+                            } else {
+                                $('#render_department').html(response.data);
+                            }
+
+                            // if ((1*response.count) < 5) {
+                            //     $('.load_more_button').hide();
+                            // }else{
+                            //     $('.load_more_button').show();
+
+                            // }
+
+                            $("#clear__filter__date").removeClass("d-none");
+                        }
+                    })
+
+                });
+                // clear filter
+                $("#clear__filter__date").on("click", function(){
+                    $(this).addClass("d-none");
+                    $("#from__date").val("");
+                    $("#to__date").val("");
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('date.clear.wise.department') }}",
+
+                        success: function(response) {
+                            $('#render_department').html(response.data);
+
+                            // if ((1*response.count) < 5) {
+                            //     $('.load_more_button').hide();
+                            // }else{
+                            //     $('.load_more_button').show();
+
+                            // }
+                        }
+                    })
+                });
+            });
+    </script>
 
 @endsection
 

@@ -110,4 +110,37 @@ class PriorityController extends Controller
         $priority->delete();
         return back()->with('danger', 'Priority Deleted Successfully');
     }
+
+
+    public function search_wise_priority(Request $request){
+        if ($request->search_value != null) {
+            $all_priorities  =  Priority::where('name','LIKE','%' . $request->search_value . '%')->get();
+        } else {
+            $all_priorities = Priority::all();
+        }
+
+        $count = $all_priorities->count();
+
+        $view  = view('includes.priority.index', compact('all_priorities'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
+    public function date_wise_priority(Request $request){
+        
+        $from_date = Carbon::parse($request->from_date);
+        $to_date    = Carbon::parse($request->to_date)->addDay();
+
+        $all_priorities = Priority::whereBetween('created_at', [$from_date, $to_date])->get();
+        $count = $all_priorities->count();
+        $view = view('includes.priority.index', compact('all_priorities'))->render();
+        return response()->json(['data' => $view, 'count' => $count]);
+    }
+
+    public function date_clear_wise_priority(Request $request){
+        $all_priorities = Priority::all();
+
+        $view = view('includes.priority.index', compact('all_priorities'))->render();
+        return response()->json(['data' => $view]);
+    }
+
 }

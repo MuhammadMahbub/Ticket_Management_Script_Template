@@ -142,4 +142,40 @@ class DepartmentController extends Controller
 
     }
 
+    public function search_wise_department(Request $request){
+        if ($request->search_value != null) {
+            $departments  =  Department::where('name','LIKE','%' . $request->search_value . '%')->get();
+        } else {
+            $departments = Department::all();
+        }
+
+        $count = $departments->count();
+
+        $roles          = UserRole::all();
+        $users          = User::where('role_id', 2)->get();
+
+        $view  = view('includes.department.index', compact('departments', 'roles', 'users'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
+    public function date_wise_department(Request $request){
+        
+        $from_date = Carbon::parse($request->from_date);
+        $to_date    = Carbon::parse($request->to_date)->addDay();
+
+        $departments = Department::whereBetween('created_at', [$from_date, $to_date])->get();
+        $count = $departments->count();
+        $roles          = UserRole::all();
+        $users          = User::where('role_id', 2)->get();
+        $view = view('includes.department.index', compact('departments', 'roles', 'users'))->render();
+        return response()->json(['data' => $view, 'count' => $count]);
+    }
+
+    public function date_clear_wise_department(Request $request){
+        $departments = Department::all();
+
+        $view = view('includes.department.index', compact('departments'))->render();
+        return response()->json(['data' => $view]);
+    }
+
 }

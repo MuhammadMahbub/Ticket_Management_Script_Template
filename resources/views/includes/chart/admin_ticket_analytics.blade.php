@@ -2,15 +2,9 @@
         <script>
             var options = {
                 series: [{
-                name: 'Total tickets',
-                data: @json($total_ticket)
-                }, {
                 name: 'Opended ticket',
                 data: @json($opened_ticket)
-                }, {
-                name: 'Pending Tickets',
-                data: @json($pending_ticket)
-                }, {
+                },{
                 name: 'Solved ticket',
                 data: @json($solved_ticket)
                 }],
@@ -24,7 +18,7 @@
                 plotOptions: {
                 bar: {
                     horizontal: false,
-                    columnWidth: '55%',
+                    columnWidth: '100%',
                     endingShape: 'rounded'
                 },
                 },
@@ -58,15 +52,9 @@
         <script>
             var options = {
                 series: [{
-                name: 'Total tickets',
-                data: @json($total_ticket)
-                }, {
                 name: 'Opended ticket',
                 data: @json($opened_ticket)
-                }, {
-                name: 'Pending Tickets',
-                data: @json($pending_ticket)
-                }, {
+                },{
                 name: 'Solved ticket',
                 data: @json($solved_ticket)
                 }],
@@ -80,7 +68,7 @@
                 plotOptions: {
                 bar: {
                     horizontal: false,
-                    columnWidth: '55%',
+                    columnWidth: '100%',
                     endingShape: 'rounded'
                 },
                 },

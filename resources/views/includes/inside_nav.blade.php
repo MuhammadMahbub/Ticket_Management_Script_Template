@@ -4,7 +4,7 @@
        <div class="top__menubar mt-4">
            <div class="top__menubar--left">
                 <a href="{{ route('ticket.index') }}" class="btn item btn-white @yield('all_tickets')">
-                {{ __('All Tickets') }} ({{ count($tickets) }})
+                {{ __('All Tickets') }} ({{ count($total_tickets) }})
                 </a>
 
                 @foreach ($status as $item)
@@ -15,9 +15,10 @@
                         {{ $item->name }} Tickets ({{ count($ticket_data) }})
                     </a>
                 @endforeach
-
+                
+                
                 <a href="{{ route('soft_deleted_tickets') }}" class="btn item btn-white @yield('soft_deleted_tickets')">
-                {{ __('Deleted Tickets') }} ({{ count($softDeletedTickets) }})
+                {{ __('Deleted Tickets') }} ({{ count($softDeletedTickets) ?? '' }})
                 </a>
            </div>
        </div>

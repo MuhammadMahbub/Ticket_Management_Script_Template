@@ -107,4 +107,35 @@ class StatusController extends Controller
         $status->delete();
         return back()->with('danger', 'Status Deleted Successfully!');
     }
+
+    public function search_wise_status(Request $request){
+        if ($request->search_value != null) {
+            $statuses  =  Status::where('name','LIKE','%' . $request->search_value . '%')->get();
+        } else {
+            $statuses = Status::all();
+        }
+
+        $count = $statuses->count();
+
+        $view  = view('includes.status.index', compact('statuses'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
+    public function date_wise_status(Request $request){
+        
+        $from_date = Carbon::parse($request->from_date);
+        $to_date    = Carbon::parse($request->to_date)->addDay();
+
+        $statuses = Status::whereBetween('created_at', [$from_date, $to_date])->get();
+        $count = $statuses->count();
+        $view = view('includes.status.index', compact('statuses'))->render();
+        return response()->json(['data' => $view, 'count' => $count]);
+    }
+
+    public function date_clear_wise_status(Request $request){
+        $statuses = Status::all();
+
+        $view = view('includes.status.index', compact('statuses'))->render();
+        return response()->json(['data' => $view]);
+    }
 }

@@ -2,7 +2,7 @@
 
 @section('title') |
     @php
-    echo App\Models\Navigation::where('route','user_role.index')->first()->name;
+        echo App\Models\Navigation::where('route','user_role.index')->first()->name;
     @endphp
 @endsection
 
@@ -99,18 +99,74 @@
 
 
         <!--==========Team Header==========-->
-        <div class="team_header d-flex justify-content-between flex-wrap mt-3">
+        <div class="team_header d-sm-flex justify-content-between flex-wrap mt-3 mb-3">
             <div class="team_header__left">
-                <div class="input-group mb-3">
-                </div>
             </div>
             <div class="team_header__right">
-                <button data-bs-toggle="modal" class="mb-4 mt-2" data-bs-target="#createRole" data-bs-whatever="@mdo">
+                <button data-bs-toggle="modal" class="w-100 w-sm-auto" data-bs-target="#createRole" data-bs-whatever="@mdo">
                     <span><i class="fa-solid fa-circle-plus me-2"></i></span>
                     {{ __('Create Role') }}
                 </button>
             </div>
         </div>
+
+        {{-- <div class="current_tickets_heading d-sm-flex justify-content-between mt-5 mb-0">
+            <div class="current_tickets_heading__left">
+                <h3>{{ __('User Role') }}</h3>
+            </div>
+            <div class="current_tickets_heading__right d-flex align-items-center">
+                <div class="input-group mb-3 me-2">
+                    <button class="btn bg-white" id="button-addon1">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                    <input type="text" id="search_tickets" class="form-control border-0" placeholder="Search Here.."  name="Search Keyword">
+                </div>
+            </div>
+        </div> --}}
+
+        <div class="row my-2">
+            <div class="col-xl-8">
+                <div class="row align-items-end">
+                    <div class="col-md">
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="from__date">From</label>
+                            <input type="date" name="from_date" id="from__date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md">
+                        <div class="form-group mb-3">
+                            <label class="form-label" for="to__date">To</label>
+                            <input type="date" name="to_date" id="to__date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-auto">
+                        <div class="form-group mb-3">
+                            <button class="btn btn-primary w-100 w-sm-auto" id="filter__date">filter</button>
+                            <button class="btn btn-danger w-100 w-sm-auto mt-2 mt-sm-0 d-none" id="clear__filter__date">Clear filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-4">
+                <div class="row align-items-end">
+                    <div class="col-md">
+                        <div class="current_tickets_heading__right d-flex align-items-center">
+                            <div class="input-group mb-3" style="margin-top: 32px">
+                                <button class="btn bg-white" id="button-addon1">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </button>
+                                <input type="text" id="search_role" class="form-control border-0" placeholder="Search Here.."  name="Search Keyword">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- <form> --}}
+
+            {{-- </form> --}}
+        </div>
+        
         <!--==========User Table==========-->
         <div class="user_list user-page table-responsive">
             <table class="table table-hover dataTable">
@@ -123,112 +179,20 @@
                         <th scope="col">{{ __('Action') }}</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @if($roles->count() > 0)
-                        @forelse($roles as $item)
-                            <tr>
-                                <th scope="row">{{ $loop->index + 1 }}</th>
-                                <td>
-                                <a href="{{ route('user_role.show', $item->id) }}" style="text-decoration:none; color:#7b7f90">{{$item->role}}</a>
-                                </td>
-                                <td>
-                                    @php
-                                        $permission = json_decode($item->permission);
-                                    @endphp
-                                    @foreach ($permission as $data)
-                                        {{ App\Models\Navigation::find($data)->name ?? '' }}
-                                        @if (!$loop->last) , @endif
-                                    @endforeach
-                                </td>
-                                <td>{{ $item->created_at->format('d-M-Y') }}</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                            data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa-solid fa-ellipsis-vertical"></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li class="mb-1"><a style="cursor: pointer" class="dropdown-item" href="{{ route('user_role.show', $item->id) }}"><i class="fa-solid fa-eye" class="mr-50"></i> {{ __('Show') }}</a></li>
-                                            <li class="mb-1"><a style="cursor: pointer" class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}"><i class="fa-solid fa-edit" class="mr-50"></i> {{ __('Edit') }}</a></li>
-                                            @if ($item->id != 1 && $item->id != 2 && $item->id != 3)
-                                                <li class="mb-1"><a style="cursor: pointer" class="dropdown-item"  data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}"><i class="fa-solid fa-edit" class="mr-50"></i> {{ __('Delete') }}</a></li>
-                                            @endif
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Modal Delete Role -->
-                            <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1"      aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header modal_header">
-                                            <h5 class="modal-title" id="exampleModalLabel">{{ __('Delete Role') }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <h6>{{ __('Are You Sure?') }}</h6>
-                                        
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                                                <form action="{{ route('user_role.destroy', $item->id) }}" method="POST">
-                                                    @csrf
-                                                    @method("DELETE")
-                                                    <button type="submit" class="btn btn-danger">{{ __('Delete') }}
-                                                </form>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        <!--=====MODAL FOR EDIT ROLE=====-->
-                            <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                                aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header border-bottom-0 modal_header">
-                                            <h5 style="color: #6C7BFF;" class="modal-title" id="exampleModalLabel">{{ __('Update Role') }}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form method="POST" action="{{ route('user_role.update',$item->id) }}">
-                                                @csrf
-                                                @method("PUT")
-                                                <div class="mb-3">
-                                                    <label for="role" class="col-form-label">{{ __('Role') }}<span class="text-danger"> *</span></label>
-                                                    <input type="text" class="form-control" name="role" id="role" value="{{ $item->role }}">
-                                                    @error('role')
-                                                        <span class="text-danger"> {{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                                @php
-                                                    $selected_permission = json_decode($item->permission);
-                                                @endphp
-                                                <div>
-                                                    @include('includes.user_update_role')
-                                                </div>
-
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('Close') }}</button>
-                                                    <button  type="submit" class="btn btn-primary">{{ __('Update') }}</button>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <tr><td colspan="4"> <h3 class="text-center text-danger">{{ __('No Data Available Here!') }}</h3></td></tr>
-                        @endforelse
-                        
-                    @endif
+                <tbody id="render_roles">
+                    @include('includes.user_role.index')
                 </tbody>
             </table>
+        </div>
+        <div class="col-md-12 mt-5">
+            <!-- Load More -->
+            {{-- <div class="load_more_button">
+                <div class="mt-10 text-center">
+                <a id="load-more" data-count="5" class="load__more__btn load_more bg-accent shadow-accent-volume hover:bg-accent-dark inline-block rounded-full text-center font-semibold text-white transition-all">
+                    Load More
+                </a>
+                </div>
+            </div> --}}
         </div>
         <!-- other content -->
     </div>
@@ -252,4 +216,116 @@
         }
         }
     </script>
+
+    {{-- search wise tickets --}}
+    <script>
+        $(document).ready(function() {
+                $('#search_role').on('keyup',function(){
+                    let search_value = $(this).val();
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('search.wise.role') }}",
+                        data: {
+                            search_value: search_value,
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if ((response.count)*1 <  1) {
+                                $('#render_roles').html('<tr ><td colspan="1000" class="text-danger text-center py-3">No Data Found</td></tr>');
+                            } else {
+                                $('#render_roles').html(response.data);
+                            }
+
+                            if ((1*response.count) < 5) {
+                                $('.load_more_button').hide();
+                            }else{
+                                $('.load_more_button').show();
+
+                            }
+
+                        }
+                    })
+
+                });
+            });
+    </script>
+
+    {{-- filter by date js --}}
+    <script>
+        $(document).ready(function() {
+                $('#filter__date').on('click',function(){
+                    let from_date = $('#from__date').val();
+                    let to_date = $('#to__date').val();
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('date.wise.user_role') }}",
+                        data: {
+                            from_date: from_date,
+                            to_date: to_date,
+                        },
+                        success: function(response) {
+                            console.log(response);
+                            if ((response.count)*1 <  1) {
+                                $('#render_roles').html('<tr ><td colspan="1000" class="text-danger text-center py-3">No Data Found</td></tr>');
+                            } else {
+                                $('#render_roles').html(response.data);
+                            }
+
+                            // if ((1*response.count) < 5) {
+                            //     $('.load_more_button').hide();
+                            // }else{
+                            //     $('.load_more_button').show();
+
+                            // }
+
+                            $("#clear__filter__date").removeClass("d-none");
+                        }
+                    })
+
+                });
+                // clear filter
+                $("#clear__filter__date").on("click", function(){
+                    $(this).addClass("d-none");
+                    $("#from__date").val("");
+                    $("#to__date").val("");
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('date.clear.wise.user_role') }}",
+
+                        success: function(response) {
+                            $('#render_roles').html(response.data);
+
+                            // if ((1*response.count) < 5) {
+                            //     $('.load_more_button').hide();
+                            // }else{
+                            //     $('.load_more_button').show();
+
+                            // }
+                        }
+                    })
+                });
+            });
+    </script>
+
 @endsection

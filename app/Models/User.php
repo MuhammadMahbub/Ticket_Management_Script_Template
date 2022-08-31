@@ -24,17 +24,28 @@ class User extends Authenticatable
      * @var string[]
      */
 
-    
+
 
     public function getRole(){
         return $this->belongsTo(UserRole::class, 'role_id', 'id');
     }
+
+    public function get_country_name(){
+        return $this->belongsTo(Country::class, 'country_id', 'id');
+    }
+
+    public function get_ticket(){
+        return $this->hasMany(Ticket::class, 'customer', 'id');
+    }
+
+    
 
 
 
 
     protected $fillable = [
         'name',
+        'country_id',
         'phone',
         'role_id',
         'permission',

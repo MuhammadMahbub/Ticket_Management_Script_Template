@@ -2,6 +2,17 @@
 @foreach ($tickets as $item)
     <tr id="tr1">
         <td>
+            <div class="custom-control custom-checkbox" cursorshover="true">
+                <input type="checkbox" name="id[]" value="{{ $item->id }}" id="customCheck{{ $item->id }}" class="custom-control-input ticket_check" data-id="{{ $item->id }}" style="cursor:pointer">
+                <label class="custom-control-label" for="customCheck{{ $item->id }}" cursorshover="true"></label>
+            </div>
+
+            {{-- <div>
+                <input type="checkbox" name="id[]" value="{{ $item->id }}" id="single_check{{ $item->id }}" class="single_check" data-id="{{ $item->id }}" style="cursor:pointer">
+                <label for="single_check{{ $item->id }}"></label>
+            </div> --}}
+        </td>
+        <td>
             <a href="{{ route('ticket.show', $item->id) }}">#{{ $item->id }}</a>
         </td>
         <td>

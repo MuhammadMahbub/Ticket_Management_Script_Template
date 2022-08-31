@@ -1,11 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
 function socialite()
 {
     return \App\Models\Socialite::first();
 }
 
-// login page setup 
+// login page setup
 function login_page_info()
 {
     return \App\Models\LoginPage::first();
@@ -91,9 +93,19 @@ function agent_notification_count_for_bel_icon(){
             $notification_id[] = $notification->id;
         }
     }
-                    
+
     $agent_notification_count = \App\Models\Notification::whereIn('id', $notification_id)->where('read_status', 0)->count();
     return $agent_notification_count;
 
 }
+
+function get_countries(){
+    return App\Models\Country::all();
+}
+
+function get_language(){
+    return App\Models\Language::all();
+}
+
+
 

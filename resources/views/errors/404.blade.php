@@ -95,13 +95,13 @@
                     
                     <div class="contant_box_404">
                         <h3>
-                        The page you are requested
+                        {{ __('The page you are requested') }}
                         </h3>
                         
-                        <h5 class="text-danger">Not Found</h5>
+                        <h5 class="text-danger">{{ __('Not Found') }}</h5>
                         <hr>
                         
-                        <a href="{{ url('/') }}" class="link_404 btn-primary">Go to Home Page</a>
+                        <a href="{{ url('/') }}" class="link_404 btn-primary">{{ __('Go to Home Page') }}</a>
                     </div>
                 </div>
             </div>

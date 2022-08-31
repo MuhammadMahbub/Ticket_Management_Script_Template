@@ -78,6 +78,7 @@ body {
 
 #menu-toggle {
     cursor: pointer;
+    color: #ffffff !important;
 }
 
 .navbar{
@@ -127,7 +128,7 @@ body {
     border-radius: 50%;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 991.98px) {
     .icon {
         display: none;
     }
@@ -199,6 +200,13 @@ body {
 }
 
 /*==========Ticket & Issue part==========*/
+
+.chart__left__heading,
+.chart__right__heading,
+.customerTicket__tickets_heading_dropdown
+{
+    flex-wrap: wrap;
+}
 
 .chart__left__heading h4 {
     font-family: var(--primary-font);
@@ -690,11 +698,13 @@ td {
     margin-bottom: 6px;
 }
 
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 575.98px) {
     .current_ticket__left__btn a {
         width: 48%;
     }
+}
 
+@media only screen and (max-width: 480px) {
     .top__menubar--right--btn {
         width: 48%;
     }
@@ -1844,12 +1854,12 @@ a{
 
 .top__menubar--left{
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     flex-wrap: wrap;
 }
 
 .top__menubar--left .btn{
-    padding: .375rem 2.3rem !important;
+    /* padding: .375rem 2.3rem !important; */
 }
 
 @media only screen and (max-width:1091.9px){
@@ -1964,7 +1974,64 @@ table a{
     background: rgb(184, 31, 31) !important;
 }
 
+.lds-dual-ring {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: #fff transparent #fff transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
+@media (max-width: 575.98px){
+    .profile-list__name,
+    .language-text,
+    .language-arrow
+    {
+        display: none;
+    }
+}
 
+@media (max-width: 399.98px){
+    .navbar .dropdown{
+        position: static
+    }
+
+    .navbar .dropdown-menu[data-bs-popper]{
+        right: 10px;
+        left: 10px;
+    }
+}
+
+@media (min-width: 576px){
+    .w-sm-auto{
+        width: initial !important;
+    }
+}
+
+.btn-close {
+    background-color: #EA5455 !important;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+}
+
+.nowrap{
+    white-space: nowrap;
+}
 
 </style>

@@ -16,7 +16,7 @@
         <!--==========profile heading==========-->
         <div class="profile_heading mt-3">
             <div class="profile_heading__navigation bg-white mt-3 px-3 d-flex flex-wrap rounded">
-                <a href="{{ route('customer_notification.index') }}" class="item active">All Notifications ({{ $customer_notification_count }})</a>
+                <a href="{{ route('customer_notification.index') }}" class="item active">{{ __('All Notifications') }} ({{ $customer_notification_count }})</a>
             </div>
         </div>
         <!--==========Profile Banner==========-->

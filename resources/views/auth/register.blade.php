@@ -30,18 +30,18 @@
                                 <form method="POST" action="{{ route('register') }}">
                                     @csrf
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Name</label>
+                                        <label for="exampleFormControlInput1" class="form-label">{{ __('Name') }}</label>
                                         <input type="text" name="name" class="form-control" id="exampleFormControlInput1"
                                             placeholder="Enter Your Name">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Email</label>
+                                        <label for="exampleFormControlInput1" class="form-label">{{ __('Email') }}</label>
                                         <input type="email" name="email" class="form-control" id="exampleFormControlInput1"
                                             placeholder="Enter Email Address">
                                     </div>
                                     
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Password</label>
+                                        <label for="exampleFormControlInput1" class="form-label">{{ __('Password') }}</label>
                                         <div class="password-wrapper">
                                             <input type="password" class="form-control password-wrapper__input" name="password" id="exampleFormControlInput1"
                                             placeholder="Enter Password">
@@ -51,7 +51,7 @@
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                                        <label for="password_confirmation" class="form-label">{{ __('Confirm Password') }}</label>
                                         <div class="password-wrapper">
                                             <input type="password" class="form-control password-wrapper__input" name="password_confirmation" id="password_confirmation"
                                             placeholder="Enter Password">
@@ -61,7 +61,19 @@
                                         </div>
                                     </div>
 
-                                    <button type="submit" class="btn w-100 login-btn mt-3">Register</button>
+                                    <div class="mb-3">
+                                        <label for="value" class="col-form-label">{{ __('Select Country') }} <span class="text-danger">*</span></label></label>
+                                        <select name="country_id" id="country_id_for_create_user" class="form-control">
+                                            @foreach (get_countries() as $country)
+                                                <option value="{{ $country->id }}" {{ $country->id == 19 ? 'selected' : '' }}>{{ $country->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('country_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <button type="submit" class="btn w-100 login-btn mt-3">{{ __('Register') }}</button>
                                 </form>
                                 {{-- <p class="timeline text-center">OR</p>
 
@@ -70,7 +82,7 @@
                                     <span><a style="text-decoration: none" href="{{ route('googleRedirect') }}">Continue With Google</a></span>
                                 </button> --}}
 
-                                <a class="dont_account mt-4" href="{{ route('login') }}">Already have an account? <b>Login Here</b></a>
+                                <a class="dont_account mt-4" href="{{ route('login') }}">{{ __('Already have an account?') }} <b>{{ __('Login Here') }}</b></a>
                             </div>
                         </div>
                     </div>

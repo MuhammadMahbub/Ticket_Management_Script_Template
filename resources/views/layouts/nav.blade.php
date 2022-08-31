@@ -1,15 +1,13 @@
-<nav class="navbar navbar-expand-lg navbar-light px-4">
+<nav class="navbar navbar-expand navbar-light px-4">
     <div class="d-flex align-items-center">
         <i class="fas fa-align-left primary-text fs-4 me-3 icon" id="menu-toggle"></i>
         <div class="input-group m-0">
         </div>
     </div>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-        aria-expanded="false" aria-label="Toggle navigation">
+    {{-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
-    </button>
+    </button> --}}
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <div class="dropdown nav-item ms-auto border-0">
@@ -17,28 +15,41 @@
                 $locale= \App::getLocale();
             @endphp
 
-            @if ($locale == 'fr')
-                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1"
+            {{-- @if ($locale == 'en')
+                <button class="btn dropdown-toggle text-white" type="button" id="dropdownMenuButton1"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     <span class="me-2 flag-icon">
-                        <img src="{{ asset('dashboard_assets/assets') }}/images/lang2.png" alt="lang.png">
+                        <img src="{{ asset('dashboard_assets/assets') }}/images/lang.png" alt="lang.png">
                     </span>
-                    French
+                    Eng
                     <i class="fa-solid fa-chevron-down"></i>
                 </button>
-            @else
-                <button class="btn text-white dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="me-2 flag-icon">
-                            <img src="{{ asset('dashboard_assets/assets') }}/images/lang.png" alt="lang.png">
-                        </span>
-                        Eng
-                        <i class="fa-solid fa-chevron-down"></i>
-                </button>
-            @endif
+            @endif --}}
 
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li>
+            {{-- <button class="btn text-white dropdown-toggle" type="button" id="dropdownMenuButton1"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="me-2 flag-icon">
+                    <img src="{{ asset('dashboard_assets/assets') }}/images/lang.png" alt="lang.png">
+                </span>
+                Eng
+                <i class="fa-solid fa-chevron-down"></i>
+            </button> --}}
+
+            @foreach (get_language() as $item)
+                @if ($locale == $item->short_name)
+                    <button class="btn dropdown-toggle text-white" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-2 flag-icon">
+                            <img src="{{ asset('uploads/lang_flag') }}/{{ $item->flag }}" alt="lang2.png">
+                        </span>
+                        <span class="language-text">{{ $item->name }}</span>
+                        <i class="fa-solid fa-chevron-down language-arrow"></i>
+                    </button>
+                @endif
+            @endforeach
+
+
+            <ul class="dropdown-menu dropdown-menu-end">
+                {{-- <li>
                     <a class="dropdown-item" href="{{ route('locale','en') }}">
                         <span class="me-2 flag-icon">
                             <img src="{{ asset('dashboard_assets/assets') }}/images/lang.png" alt="lang.png">
@@ -49,14 +60,25 @@
                 <li>
                     <a class="dropdown-item" href="{{ route('locale','fr') }}">
                         <span class="me-2 flag-icon">
-                            <img src="{{ asset('dashboard_assets/assets') }}/images/lang2.png" alt="lang2.png">
+                            <img src="{{ asset('dashboard_assets/assets') }}/images/lang2.png" alt="lang.png">
                         </span>
                         French
                     </a>
+                </li> --}}
+
+                @foreach (get_language() as $lang)
+                <li>
+                    <a class="dropdown-item" href="{{ route('locale', $lang->short_name) }}">
+                        <span class="me-2 flag-icon">
+                            <img src="{{ asset('uploads/lang_flag') }}/{{ $lang->flag }}" alt="lang2.png">
+                        </span>
+                        {{ $lang->name }}
+                    </a>
                 </li>
+                @endforeach
             </ul>
         </div>
-        
+
         @if (Auth::User()->role_id == 1)
             <div class="nav-item mx-2 dropdown">
                 <button type="button" class="btn position-relative bell_icon text-white p-0 dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -70,11 +92,11 @@
                     </span>
                 </button>
 
-                <ul class="dropdown-menu dropdown-scroll dropdown-menu-end mt-2" aria-labelledby="dropdownMenuButton1"  id="adminNotificationRender"> 
-                    
+                <ul class="dropdown-menu dropdown-scroll dropdown-menu-end mt-2" aria-labelledby="dropdownMenuButton1"  id="adminNotificationRender">
+
                 </ul>
             </div>
-        
+
         @elseif(Auth::User()->role_id == 2)
             <div class="nav-item me-2 ms-2 dropdown">
                 <button type="button" class="btn position-relative bell_icon p-0 dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -88,8 +110,8 @@
                     </span>
                 </button>
 
-                <ul class="dropdown-menu dropdown-scroll dropdown-menu-end mt-2" aria-labelledby="dropdownMenuButton1"  id="agentNotificationRender"> 
-                    
+                <ul class="dropdown-menu dropdown-scroll dropdown-menu-end mt-2" aria-labelledby="dropdownMenuButton1"  id="agentNotificationRender">
+
                 </ul>
             </div>
         @else
@@ -105,16 +127,17 @@
                     </span>
                 </button>
 
-                <ul class="dropdown-menu dropdown-scroll dropdown-menu-end mt-2" aria-labelledby="dropdownMenuButton1"  id="customerNotificationRender"> 
-                    
+                <ul class="dropdown-menu dropdown-scroll dropdown-menu-end mt-2" aria-labelledby="dropdownMenuButton1"  id="customerNotificationRender">
+
                 </ul>
             </div>
         @endif
 
-        <ul class="navbar-nav mb-2 mb-lg-0">
+        <ul class="navbar-nav profile-list">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img width="35" height="35" class="rounded-circle" src="{{ Auth::user()->profile_photo_url }}"> {{ Auth::user()->name }}
+                    <img width="35" height="35" class="rounded-circle profile-list__image" src="{{ Auth::user()->profile_photo_url }}">
+                    <span class="profile-list__name">{{ Auth::user()->name }}</span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="{{ url('user/profile') }}"><i class="mr-50"

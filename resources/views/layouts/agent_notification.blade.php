@@ -10,7 +10,7 @@
                 {{-- <span class="mark_read_icon"><i class="fa-brands fa-markdown"></i></span> --}}
             </a> 
            
-            <a class="btn btn-sm btn-info mark__as__read__btn" data-id="{{ $notification->id }}" id="mark__as__read__btn" style="float: right; margin:3px 10px">Mark as read</a>
+            <a class="btn btn-sm btn-info mark__as__read__btn" data-id="{{ $notification->id }}" id="mark__as__read__btn" style="float: right; margin:3px 10px">{{ __('Mark as read') }}</a>
         </div>
         
     </li>
@@ -20,12 +20,12 @@
 @if (count($agent_notifications) > 0)
     <div class="read_btn">
         <li class="dropdown-menu-footer" id="all_notification_footer">
-            <a class="btn btn-danger mark_read_btn mark_read_btn_danger d-block" href="{{ route('mark.agent.notification') }}"> Mark As Read All Notification </a>
+            <a class="btn btn-danger mark_read_btn mark_read_btn_danger d-block" href="{{ route('mark.agent.notification') }}"> {{ __('Mark As Read All Notification') }} </a>
         </li>
         
         
         <li class="dropdown-menu-footer" id="all_notification_footer">
-            <a class="btn btn-primary mark_read_btn mark_read_btn_info d-block" href="{{ route('agent_notification.index') }}" style="margin: 20px 20px;"> View All Notification </a>
+            <a class="btn btn-primary mark_read_btn mark_read_btn_info d-block" href="{{ route('agent_notification.index') }}" style="margin: 20px 20px;"> {{ __('View All Notification') }} </a>
         </li>
 
     </div>  
@@ -33,7 +33,7 @@
 
     <li class="single--item">
         <a class="dropdown-item dropDown__inner">
-            <p class="m-0 text-danger">No notification available here!</p>
+            <p class="m-0 text-danger">{{ __('No notification available here!') }}</p>
         </a> 
     </li>
     

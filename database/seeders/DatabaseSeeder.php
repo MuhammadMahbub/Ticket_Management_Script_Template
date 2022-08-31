@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             ReplySeeder::class,
             ColorSettingSeeder::class,
             GeneralSettingSeeder::class,
+            CountrySeeder::class,
+            LanguageSeeder::class,
         ]);
     }
 }

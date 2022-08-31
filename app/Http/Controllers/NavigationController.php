@@ -83,6 +83,37 @@ class NavigationController extends Controller
         return redirect()->route('navigation.index')->with('success', 'Navigation updated Successfully');
     }
 
+    public function search_wise_navigation(Request $request){
+        if ($request->search_value != null) {
+            $all_navigation_data  =  Navigation::where('name','LIKE','%' . $request->search_value . '%')->get();
+        } else {
+            $all_navigation_data = Navigation::all();
+        }
+
+        $count = $all_navigation_data->count();
+
+        $view  = view('includes.navigation.index', compact('all_navigation_data'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
+    public function date_wise_navigation(Request $request){
+        
+        $from_date = Carbon::parse($request->from_date);
+        $to_date    = Carbon::parse($request->to_date)->addDay();
+
+        $all_navigation_data = Navigation::whereBetween('created_at', [$from_date, $to_date])->get();
+        $count = $all_navigation_data->count();
+        $view = view('includes.navigation.index', compact('all_navigation_data'))->render();
+        return response()->json(['data' => $view, 'count' => $count]);
+    }
+
+    public function date_clear_wise_navigation(Request $request){
+        $all_navigation_data = Navigation::all();
+
+        $view = view('includes.navigation.index', compact('all_navigation_data'))->render();
+        return response()->json(['data' => $view]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

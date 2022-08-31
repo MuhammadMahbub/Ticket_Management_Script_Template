@@ -21,7 +21,7 @@
 
                         <label class="mt-3" for="#">{{ __('Status') }}
                         @if (count($status) == 0)
-                            <span style="color:#8b8989; font-size:13px">(If do not have status, then create a status.) | <a href="{{ route('status.index') }}" style="text-decoration: none"> create status </a></span>
+                            <span style="color:#8b8989; font-size:13px">({{ __('If do not have status, then create a status') }}) | <a href="{{ route('status.index') }}" style="text-decoration: none"> create status </a></span>
                         @endif
                          </label>
 
@@ -34,7 +34,7 @@
 
                         <label class="mt-3" for="#">{{ __('Priority') }}
                             @if (count($priority) == 0)
-                            <span style="color:#8b8989; font-size:13px">(If do not have priority, then create a priority) | <a href="{{ route('priority.index') }}" style="text-decoration: none"> create priority </a></span>
+                            <span style="color:#8b8989; font-size:13px">({{ __('If do not have priority, then create a priority') }}) | <a href="{{ route('priority.index') }}" style="text-decoration: none"> {{ __('create priority') }} </a></span>
                              @endif
                         </label>
                         <select name="priority" class="form-select mt-1" aria-label="Default select example">
@@ -82,7 +82,7 @@
 
                             <label class="mt-3" for="#">{{ __('Department') }} <span class="text-danger">*</span>
                                 @if (count($department) == 0)
-                                <span style="color:#8b8989; font-size:13px">(If do not have department, then create a department) | <a href="{{ route('department.index') }}" style="text-decoration: none"> create department </a></span>
+                                <span style="color:#8b8989; font-size:13px">({{ __('If do not have department, then create a department') }}) | <a href="{{ route('department.index') }}" style="text-decoration: none"> create department </a></span>
                                 @endif
                             </label>
                             <select name="department" id="dept_dropdown" class="form-select mt-1 dept_dropdown" aria-label="Default select example">

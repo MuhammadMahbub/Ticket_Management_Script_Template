@@ -19,23 +19,23 @@
 @if (count($admin_notifications) > 0)
     <div class="read_btn">
         <li class="dropdown-menu-footer" id="all_notification_footer">
-            <a class="btn btn-danger mark_read_btn mark_read_btn_danger d-block" href="{{ route('mark.admin.notification') }}"> Mark As Read All Notification </a>
+            <a class="btn btn-danger mark_read_btn mark_read_btn_danger d-block" href="{{ route('mark.admin.notification') }}"> {{ __('Mark As Read All Notification') }} </a>
         </li>
         
         <li class="dropdown-menu-footer" id="all_notification_footer">
-            <a class="btn btn-primary mark_read_btn mark_read_btn_info d-block" href="{{ route('notification.index') }}" style="margin: 20px 20px;"> View All Notification </a>
+            <a class="btn btn-primary mark_read_btn mark_read_btn_info d-block" href="{{ route('notification.index') }}" style="margin: 20px 20px;"> {{ __('View All Notification') }} </a>
         </li>
 
         <li class="dropdown-menu-footer" id="all_notification_footer">
-            <a class="btn btn-danger mark_read_btn clear_all_admin_notification d-block" href="{{ route('admin.clear.all.notification') }}"> Clear All Notification </a>
+            <a class="btn btn-danger mark_read_btn clear_all_admin_notification d-block" href="{{ route('admin.clear.all.notification') }}"> {{ __('Clear All Notification') }} </a>
         </li>
         
-
+        
     </div>  
 @else
     <li class="single--item">
         <a class="dropdown-item dropDown__inner">
-            <p class="m-0 text-danger">No notification available here!</p>
+            <p class="m-0 text-danger">{{ __('No notification available here!') }}</p>
         </a> 
     </li>
 @endif

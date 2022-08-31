@@ -30,12 +30,12 @@
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Email</label>
+                                        <label for="exampleFormControlInput1" class="form-label">{{ __('Email') }}</label>
                                         <input type="email" name="email" class="form-control" id="exampleFormControlInput1"
                                             placeholder="Enter Email Address">
                                     </div>
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Password</label>
+                                        <label for="exampleFormControlInput1" class="form-label">{{ __('Password') }}</label>
                                         <div class="password-wrapper">
                                             <input type="password" class="form-control password-wrapper__input" name="password" id="exampleFormControlInput1"
                                             placeholder="Enter Password">
@@ -47,11 +47,11 @@
                                     <div class="remfor d-flex justify-content-between">
                                         <label class="list-group-item">
                                             <input class="form-check-input me-1" type="checkbox" value="">
-                                            Remember Me
+                                            {{ __('Remember Me') }}
                                         </label>
-                                        <a class="forget_pss" href="{{ route('password.request') }}">Forgot your password?</a>
+                                        <a class="forget_pss" href="{{ route('password.request') }}">{{ __('Forgot your password?') }}</a>
                                     </div>
-                                    <button type="submit" class="btn w-100 login-btn mt-3">Login</button>
+                                    <button type="submit" class="btn w-100 login-btn mt-3">{{ __('Login') }}</button>
                                 </form>
                                 {{-- <p class="timeline text-center">or</p>
 
@@ -60,7 +60,7 @@
                                     <span><a style="text-decoration: none" href="{{ route('googleRedirect') }}">Continue With Google</a></span>
                                 </button> --}}
 
-                                <a class="dont_account mt-4" href="{{ route('register') }}">Don’t have an account? <b>Sign Up</b></a>
+                                <a class="dont_account mt-4" href="{{ route('register') }}">{{ __('Don’t have an account?') }} <b>{{ __('Sign Up') }}</b></a>
                             </div>
                         </div>
                     </div>

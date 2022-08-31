@@ -15,7 +15,8 @@ class GeneralSettingSeeder extends Seeder
     public function run()
     {
         GeneralSetting::create([
-            'logo'  => 'logo.png',
+            'logo'     => 'logo.png',
+            'favicon'  => 'favicon.png',
         ]);
     }
 }

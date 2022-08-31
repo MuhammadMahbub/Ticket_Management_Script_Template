@@ -16,6 +16,11 @@ class Ticket extends Model
         return $this->hasOne(User::class, 'id', 'customer');
     }
 
+    public function myCustomer()
+    {
+        return $this->belongsTo(User::class, 'customer', 'id');
+    }
+
     public function get_department(){
         return $this->hasOne(Department::class, 'id', 'department');
     }

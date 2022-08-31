@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Ticket;
 use App\Models\UserRole;
 use App\Models\Department;
+use App\Models\Navigation;
 use App\Models\Ticket_reply;
 use Illuminate\Http\Request;
 
@@ -14,6 +15,7 @@ class UserRoleController extends Controller
 {
     public function index()
     {
+
         return view('admin.user_role.index',[
             'roles' => UserRole::all(),
         ]);
@@ -90,5 +92,37 @@ class UserRoleController extends Controller
             $userRole->delete();
             return redirect()->route('user_role.index')->withDanger('Role Deleted Successfully');
         }
+    }
+
+
+    public function search_wise_role(Request $request){
+        if ($request->search_value != null) {
+            $permission_id         =  Navigation::where('name', 'LIKE','%' . $request->search_value . '%')->pluck('id');
+            $roles                 = UserRole::where('role','LIKE','%' . $request->search_value . '%')->orWhereIn('permission', $permission_id)->limit(5)->get();
+        } else {
+            $roles = UserRole::all();
+        }
+
+        $count = $roles->count();
+
+        $view  = view('includes.user_role.index', compact('roles'))->render();
+        return response()->json(['data' => $view , 'count' => $count]);
+    }
+
+    public function date_wise_user_role(Request $request){
+        
+        $from_date  = Carbon::parse($request->from_date);
+        $to_date    = Carbon::parse($request->to_date)->addDay();
+
+        $roles = UserRole::whereBetween('created_at', [$from_date, $to_date])->get();
+        $count = $roles->count();
+        $view  = view('includes.user_role.index', compact('roles'))->render();
+        return response()->json(['data' => $view, 'count' => $count]);
+    }
+
+    public function date_clear_wise_user_role(Request $request){
+        $roles = UserRole::all();
+        $view = view('includes.user_role.index', compact('roles'))->render();
+        return response()->json(['data' => $view]);
     }
 }

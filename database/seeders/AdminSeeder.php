@@ -18,6 +18,7 @@ class AdminSeeder extends Seeder
     {
         User::create([
             'name' => 'Admin',
+            'country_id' => 19,
             'phone' => '01868752464',
             'role_id' => 1,
             'permission' => json_encode(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13']),
@@ -28,6 +29,7 @@ class AdminSeeder extends Seeder
 
         User::create([
             'name' => 'Agent',
+            'country_id' => 19,
             'phone' => '01868752464',
             'role_id' => 2,
             'permission' => json_encode(['1']),
@@ -38,6 +40,7 @@ class AdminSeeder extends Seeder
 
         User::create([
             'name' => 'Customer',
+            'country_id' => 19,
             'phone' => '01868752464',
             'role_id' => 3,
             'permission' => json_encode(['1']),

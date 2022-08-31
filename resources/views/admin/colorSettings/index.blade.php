@@ -34,7 +34,7 @@
                                         </div>               
                                     </div>
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-primary mr-1 mt-3">{{ __('Submit') }}</button>
+                                        <button type="submit" class="btn btn-primary w-100 w-sm-auto mt-3">{{ __('Submit') }}</button>
                                     </div>
                                 </div>
                             </form>

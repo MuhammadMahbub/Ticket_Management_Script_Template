@@ -62,12 +62,13 @@
                     $.ajax({
                         url: "{{ route('get_country') }}",
                         type: "POST",
-                        data: {
+                        data: { 
                             country_name: region,
                         },
                         success: function(data){
-                            // console.log(data);
+                            console.log(data);
                             $('.map_heading').html(data.data);
+                            // $('.map_value').html(data.county_wise_customer_result);
                         },
                     });
 
@@ -75,13 +76,24 @@
                 normalizeFunction: 'polynomial'
             });
 
-            $('#myTable').DataTable();
+            $('#myTable').DataTable({
+                bLengthChange: true,
+                "sDom": 'RlfrtlipB',
+            });
             $('.dataTables_filter').hide();
             $('.dataTables_length').hide();
+            
             $('.previous').text('');
             $('.previous').append('<i class="fa-solid fa-caret-left"></i>');
             $('.next').text('');
             $('.next').append('<i class="fa-solid fa-caret-right"></i>');
+            $.extend( $.fn.DataTable.defaults, {
+                searching: false,
+                ordering:  false,
+                info: false,
+                "lengthChange": false,
+            } );
+ 
         </script>
 
         <script>
