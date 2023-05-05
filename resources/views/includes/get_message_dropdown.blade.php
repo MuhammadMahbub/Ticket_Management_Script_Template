@@ -21,8 +21,7 @@
                 </div>
             </div>
         @else
-            <div
-            class="bug_fixing_inbox_start__msg__outgoing_msg d-flex flex-row-reverse">
+            <div class="bug_fixing_inbox_start__msg__outgoing_msg d-flex flex-row-reverse">
                 <div class="bug_fixing_inbox_start__msg__outgoing_msg__new border_down">
                     @php
                         $profile_image = App\Models\User::find($item->user_id);

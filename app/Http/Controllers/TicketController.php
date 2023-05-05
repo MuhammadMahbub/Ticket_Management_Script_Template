@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\CarbonPeriod;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Status;
 use App\Models\Ticket;
 use App\Models\Priority;
 use App\Models\UserRole;
+use Carbon\CarbonPeriod;
 use App\Models\Department;
 use App\Mail\AgentMailSend;
 use App\Models\Notification;
 use App\Models\Ticket_reply;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TicketController extends Controller
@@ -557,8 +557,7 @@ class TicketController extends Controller
     }
 
     public function ticket_reply($id)
-    {
-        
+    {  
         $all_reply_individual_tickets = Ticket_reply::where('ticket_id', $id)->orderBy('id', 'ASC')->get(); // also use latest()
         $single_ticket_info           = Ticket::find($id);
         $status                       = Status::all();
