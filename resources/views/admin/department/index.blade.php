@@ -155,12 +155,6 @@
 
             var role_id = $(this).val();
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
             $.ajax({
                 type: 'POST',
                 url: "{{ route('get.users') }}",
@@ -182,12 +176,6 @@
 
             var role_id = $(this).val();
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
             $.ajax({
                 type: 'POST',
                 url: "{{ route('edit.department') }}",
@@ -208,12 +196,6 @@
         $(document).ready(function() {
                 $('#search_department').on('keyup',function(){
                     let search_value = $(this).val();
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -243,12 +225,6 @@
                 $('#filter__date').on('click',function(){
                     let from_date = $('#from__date').val();
                     let to_date = $('#to__date').val();
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -282,12 +258,6 @@
                     $(this).addClass("d-none");
                     $("#from__date").val("");
                     $("#to__date").val("");
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',

@@ -278,12 +278,6 @@
             $('.dept_dropdown_two').change(function() {
 
                 var dept_id = $(this).val();
-                // alert(dept_id);
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     type: 'POST',

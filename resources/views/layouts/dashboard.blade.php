@@ -939,12 +939,7 @@
             $('.dept_dropdown').change(function() {
 
                 var dept_id = $(this).val();
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                console.log(dept_id);
 
                 $.ajax({
                     type: 'POST',
@@ -1077,12 +1072,7 @@
                 $("#clear__filter__agents").on("click", function(){
                     $(this).addClass("d-none");
                     $("#agent_id").val("");
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
+                    console.log("abc");
 
                     $.ajax({
                         type: 'POST',
@@ -1109,12 +1099,6 @@
         $(document).ready(function() {
                 $('#search_tickets').on('keyup',function(){
                     let search_value = $(this).val();
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -1160,11 +1144,7 @@
 
                 let load_more = $(this);
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                
 
                 $.ajax({
                     url: "{{ route('tickets.load-more') }}",
@@ -1207,13 +1187,6 @@
             $('.ticket_analytics_admin').on('change', function(){
                 let data = $(this).val();
 
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
                 $.ajax({
                     url: "{{ route('ticket.analytics.admin') }}",
                     type: "post",
@@ -1237,13 +1210,6 @@
     <script>
         $(document).ready(function(){
             $('.current_issues_chart').on('change', function(){
-                let month = $(this).val();
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     url: "{{ route('current.issues.chart') }}",
@@ -1404,11 +1370,6 @@
             $('.today_tomorrow').on('change', function(){
                 let search_value = $(this).val();
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     url: "{{ route('today.tomorrow.ticket') }}",
@@ -1473,13 +1434,6 @@
                     $('.ticket_export_delete').removeClass('d-none'); 
                 }
 
-                // Ajax Setup
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
                 $.ajax({
                     type: "post",
                     url: "{{ route('filter.by.all.tickets') }}",
@@ -1536,14 +1490,6 @@
                 }else{
                     $('.ticket_export_delete').removeClass('d-none'); 
                 }
-
-
-                // Ajax Setup
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     type: "post",

@@ -223,12 +223,6 @@
                 $('#search_role').on('keyup',function(){
                     let search_value = $(this).val();
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('search.wise.role') }}",
@@ -264,12 +258,6 @@
                     let from_date = $('#from__date').val();
                     let to_date = $('#to__date').val();
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('date.wise.user_role') }}",
@@ -302,12 +290,6 @@
                     $(this).addClass("d-none");
                     $("#from__date").val("");
                     $("#to__date").val("");
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',

@@ -223,11 +223,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
 
                 var dept_id = $(this).val();
                 // alert(dept_id);
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                
 
                 $.ajax({
                     type: 'POST',
@@ -260,12 +256,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
 
                     let stat_id = $('#stat_id').val();
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
+                    
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('individual_date.wise.tickets') }}",
@@ -302,11 +293,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
                     $("#from__date").val("");
                     $("#to__date").val("");
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
+                    
 
                     $.ajax({
                         type: 'POST',
@@ -334,11 +321,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
                     let agents_id = $('#agent_id').val();
                     let stat_id   = $('#stat_id').val();
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
+                    
 
                     $.ajax({
                         type: 'POST',
@@ -373,11 +356,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
                     $(this).addClass("d-none");
                     $("#agent_id").val("");
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
+                    
 
                     $.ajax({
                         type: 'POST',
@@ -406,11 +385,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
                     let search_value = $(this).val();
                     let stat_id = $('#stat_id').val();
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
+                    
 
                     $.ajax({
                         type: 'POST',
@@ -458,11 +433,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
 
                 let load_more = $(this);
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                
 
                 $.ajax({
                     url: "{{ route('individual_tickets.load-more') }}",
@@ -546,11 +517,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
                 }
 
                 // Ajax Setup
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                
 
                 $.ajax({
                     type: "post",
@@ -611,11 +578,7 @@ echo App\Models\Navigation::where('route','ticket.index')->first()->name;
 
 
                 // Ajax Setup
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
+                
 
                 $.ajax({
                     type: "post",

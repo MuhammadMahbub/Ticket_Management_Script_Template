@@ -175,11 +175,7 @@ echo App\Models\Navigation::where('route','users.index')->first()->name;
 
                 var role_id_for_create_user = $(this).val();
                 //ajax setup
-                $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+               
 
             $.ajax({
                 type: 'POST',
@@ -201,11 +197,6 @@ echo App\Models\Navigation::where('route','users.index')->first()->name;
 
                 var role_id_for_create_user = $(this).val();
                 //ajax setup
-                $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
 
             $.ajax({
                 type: 'POST',
@@ -227,12 +218,6 @@ echo App\Models\Navigation::where('route','users.index')->first()->name;
         $(document).ready(function() {
                 $('#search_user').on('keyup',function(){
                     let search_value = $(this).val();
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -262,12 +247,6 @@ echo App\Models\Navigation::where('route','users.index')->first()->name;
                 $('#filter__date').on('click',function(){
                     let from_date = $('#from__date').val();
                     let to_date = $('#to__date').val();
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -301,12 +280,6 @@ echo App\Models\Navigation::where('route','users.index')->first()->name;
                     $(this).addClass("d-none");
                     $("#from__date").val("");
                     $("#to__date").val("");
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',

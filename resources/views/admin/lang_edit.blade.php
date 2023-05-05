@@ -79,11 +79,7 @@
             let data = $(this).attr('data')
             let lang_name = $(this).attr('lang_name')
             $('.lang_text').text(lang_name)
-            $.ajaxSetup({
-                headers:{
-                    'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-                }
-            })
+           
 
             $.ajax({
                 type: "POST",
@@ -110,11 +106,6 @@
             let data_value = $('.data_value'+loop_index).val();
             // console.log(data_value);
 
-            $.ajaxSetup({
-                headers:{
-                    'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content')
-                }
-            })
 
             $.ajax({
                 type: "POST",

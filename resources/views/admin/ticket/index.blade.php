@@ -286,12 +286,6 @@
 
             var dept_id = $(this).val();
 
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
             $.ajax({
                 type: 'POST',
                 url: "{{ route('get.agents') }}",
@@ -321,12 +315,6 @@
                 $('#filter__date').on('click',function(){
                     let from_date = $('#from__date').val();
                     let to_date = $('#to__date').val();
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -363,11 +351,6 @@
                     $("#from__date").val("");
                     $("#to__date").val("");
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -393,12 +376,6 @@
         $(document).ready(function() {
                 $('#filter__agents').on('click',function(){
                     let agents_id = $('#agent_id').val();
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -432,12 +409,6 @@
                     $(this).addClass("d-none");
                     $("#agent_id").val("");
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('agent.clear.wise.tickets') }}",
@@ -463,12 +434,6 @@
         $(document).ready(function() {
                 $('#search_tickets').on('keyup',function(){
                     let search_value = $(this).val();
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -513,12 +478,6 @@
 
 
                 let load_more = $(this);
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     url: "{{ route('tickets.load-more') }}",
@@ -591,13 +550,6 @@
                     $('.ticket_export_delete').removeClass('d-none');
                 }
 
-                // Ajax Setup
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
                 $.ajax({
                     type: "post",
                     url: "{{ route('filter.by.all.tickets') }}",
@@ -654,14 +606,6 @@
                 }else{
                     $('.ticket_export_delete').removeClass('d-none');
                 }
-
-
-                // Ajax Setup
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     type: "post",

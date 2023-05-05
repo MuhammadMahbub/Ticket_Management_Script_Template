@@ -14,11 +14,7 @@
         $('#role_dropdown').change(function() {
 
             var role_id = $(this).val();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+           
 
             $.ajax({
                 type: 'POST',
@@ -39,12 +35,7 @@
         $('#role_drop').change(function() {
 
             var role_id = $(this).val();
-            alert(role_id)
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+            
 
             $.ajax({
                 type: 'POST',
@@ -67,11 +58,7 @@
         $('#dept_dropdown').change(function() {
 
             var dept_id = $(this).val();
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
+           
 
             $.ajax({
                 type: 'POST',

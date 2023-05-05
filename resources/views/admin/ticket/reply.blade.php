@@ -215,12 +215,6 @@
                     var reply_message = $('.reply').val();
                     var ticket_id     = $('.ticket_id').val();
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('get.message') }}",
@@ -245,12 +239,6 @@
                 var reply_message = $('.reply').val();
                 var ticket_id     = $('.ticket_id').val();
 
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-
                 $.ajax({
                     type: 'POST',
                     url: "{{ route('get.message') }}",
@@ -271,12 +259,6 @@
             function renderReply(){
 
                 var ticket_id = $('.ticket_id').val();
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     type: 'POST',
@@ -299,11 +281,6 @@
                let status_id  = $(this).val();
                let ticket_id = $('.status_update_ticket_id').val();
             //    alert(ticket_id);
-               $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
 
                 $.ajax({
                     type: 'POST',

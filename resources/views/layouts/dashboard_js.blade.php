@@ -33,6 +33,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.min.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
+        <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+        </script>
 
         <script>
             jQuery('#vmap').vectorMap({
@@ -54,11 +61,6 @@
                 onRegionClick:function(event, code, region) {
                     // alert(region);
 
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
                     $.ajax({
                         url: "{{ route('get_country') }}",
                         type: "POST",
@@ -135,6 +137,7 @@
             toastr.success('{{ session()->get('success') }}');
         </script>
         @endif
+
         <script>
             $(document).ready( function() {
                 $('.dataTable').DataTable();
@@ -164,11 +167,6 @@
                 renderNotification();
 
                 function renderNotification(){
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -194,11 +192,6 @@
                 renderNotification();
 
                 function renderNotification(){
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
 
                     $.ajax({
                         type: 'POST',
@@ -224,12 +217,6 @@
                 renderNotification();
 
                 function renderNotification(){
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('get.customer.render.notification') }}",
@@ -255,12 +242,7 @@
                 renderNotification();
 
                 function renderNotification(){
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
+                    
                     $.ajax({
                         type: 'POST',
                         url: "{{ route('render.view.all.notification') }}",
